@@ -33,6 +33,11 @@ function Home() {
           '-=0.45',
         )
         .from(
+          '[data-reveal="cta"]',
+          { y: 16, opacity: 0, duration: 0.6 },
+          '-=0.35',
+        )
+        .from(
           '[data-reveal="asset"]',
           {
             scale: 0.9,

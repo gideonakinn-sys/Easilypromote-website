@@ -1,12 +1,74 @@
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
+
+const HEADING_WORDS = ['We', 'built', 'the', 'marketplace', 'we', 'wished', 'existed.']
+
 function About() {
+  const rootRef = useRef<HTMLElement>(null)
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+      tl.from(
+        '[data-reveal="word"]',
+        {
+          yPercent: 110,
+          opacity: 0,
+          duration: 0.85,
+          ease: 'power4.out',
+          stagger: 0.035,
+        },
+      )
+        .from(
+          '[data-reveal="block"]',
+          { y: 24, opacity: 0, duration: 0.7 },
+          '-=0.4',
+        )
+        .from(
+          '[data-reveal="closing"]',
+          { y: 20, opacity: 0, duration: 0.7 },
+          '-=0.3',
+        )
+        .from(
+          '[data-reveal="signature"]',
+          { y: 16, opacity: 0, duration: 0.7 },
+          '-=0.35',
+        )
+    }, rootRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <main className="flex flex-1 items-center px-5 py-16 md:px-10 md:py-24">
+    <main
+      ref={rootRef}
+      className="flex flex-1 items-center px-5 py-16 md:px-10 md:py-24"
+    >
       <div className="mx-auto w-full max-w-2xl text-left">
-        <h1 className="font-rethink text-[34px] font-medium leading-[1.05] tracking-tighter text-stone-900 md:text-[42px]">
-          We built the marketplace we wished existed.
+        <h1 className="max-w-2xl text-[30px] font-medium leading-[1.1] tracking-tighter text-stone-900 md:text-[36px]">
+          {HEADING_WORDS.map((word, i) => (
+            <span
+              key={i}
+              className="-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom"
+            >
+              <span
+                data-reveal="word"
+                className="inline-block will-change-transform"
+              >
+                {word}
+              </span>
+              {i < HEADING_WORDS.length - 1 ? '\u00A0' : ''}
+            </span>
+          ))}
         </h1>
 
-        <div className="mt-8 space-y-7 text-[15px] font-medium leading-[1.8] tracking-[-0.01em] text-stone-600 md:mt-10 md:text-[16px]">
+        <div
+          data-reveal="block"
+          className="mt-8 space-y-7 text-[15px] font-medium leading-[1.8] tracking-[-0.01em] text-stone-600 md:mt-10 md:text-[16px]"
+        >
           <p>
             Influencer marketing has always asked businesses to pay for a
             promise, not a result. You find a creator, negotiate a rate, hope
@@ -36,7 +98,10 @@ function About() {
           </p>
         </div>
 
-        <div className="mt-12 space-y-7 text-[15px] font-medium leading-[1.8] tracking-[-0.01em] text-stone-600 md:text-[16px]">
+        <div
+          data-reveal="block"
+          className="mt-12 space-y-7 text-[15px] font-medium leading-[1.8] tracking-[-0.01em] text-stone-600 md:text-[16px]"
+        >
           <p>
             And to the creators reading this — we see you too. We know what
             it&apos;s like to be talented and consistent and still overlooked
@@ -64,11 +129,17 @@ function About() {
           </p>
         </div>
 
-        <p className="mt-14 text-base font-semibold leading-snug tracking-[-0.01em] text-stone-900 md:text-lg">
+        <p
+          data-reveal="closing"
+          className="mt-14 text-base font-semibold leading-snug tracking-[-0.01em] text-stone-900 md:text-lg"
+        >
           Businesses buy results. Creators earn them. Let&apos;s get to work.
         </p>
 
-        <p className="mt-6 font-motterdam text-[19px] font-normal tracking-[-0.01em] text-stone-900 md:mt-8">
+        <p
+          data-reveal="signature"
+          className="mt-6 font-motterdam text-xl font-normal tracking-[-0.01em] text-stone-900 md:mt-8 md:text-2xl"
+        >
           — The EasilyPromote team
         </p>
       </div>
