@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { joinWaitlist } from '../lib/api'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -9,13 +10,14 @@ interface WaitlistFormProps {
 function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({})
+  const [errors, setErrors] = useState<{ name?: string; email?: string; submit?: string }>({})
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const nextErrors: { name?: string; email?: string } = {}
+    const nextErrors: { name?: string; email?: string; submit?: string } = {}
     if (!name.trim()) {
       nextErrors.name = 'Please enter your name or business name'
     }
@@ -28,8 +30,18 @@ function WaitlistForm({ onSuccess }: WaitlistFormProps) {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
 
-    setSubmitted(true)
-    window.setTimeout(onSuccess, 1600)
+    setSubmitting(true)
+    try {
+      await joinWaitlist({ name: name.trim(), email: email.trim() })
+      setSubmitted(true)
+      window.setTimeout(onSuccess, 1600)
+    } catch (error) {
+      setErrors({
+        submit: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -53,7 +65,7 @@ function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           You&apos;re on the list{name.trim() ? `, ${name.trim().split(' ')[0]}` : ''}.
         </p>
         <p className="text-xs font-medium leading-relaxed tracking-[-0.01em] text-stone-500">
-          We&apos;ll be in touch when we go live.
+          We&apos;ve sent a confirmation to your email. We&apos;ll be in touch when we go live.
         </p>
       </div>
     )
@@ -101,11 +113,18 @@ function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         )}
       </div>
 
+      {errors.submit && (
+        <span className="rounded-xl bg-red-50 px-4 py-2 text-xs font-medium text-red-600">
+          {errors.submit}
+        </span>
+      )}
+
       <button
         type="submit"
-        className="mt-1 w-full rounded-full border border-stone-100 bg-brand px-4 py-3 text-sm font-semibold text-stone-900"
+        disabled={submitting}
+        className="mt-1 w-full rounded-full border border-stone-100 bg-brand px-4 py-3 text-sm font-semibold text-stone-900 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Join waitlist
+        {submitting ? 'Joining…' : 'Join waitlist'}
       </button>
     </form>
   )
