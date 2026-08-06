@@ -26,20 +26,41 @@ function VideoCarousel() {
     if (!track || slideUrls.length === 0) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const halfWidth = track.scrollWidth / 2
+    let debounce: ReturnType<typeof setTimeout>
 
-    scrollTweenRef.current = gsap.to(track, {
-      x: `-=${halfWidth}`,
-      duration: 30,
-      ease: 'none',
-      repeat: -1,
-      onRepeat() {
-        gsap.set(track, { x: 0 })
-      },
+    const start = () => {
+      const half = track.scrollWidth / 2
+      if (half <= 0) return
+
+      const currentX = (gsap.getProperty(track, 'x') as number) || 0
+      const safeX = ((currentX % half) + half) % half - half
+
+      scrollTweenRef.current?.kill()
+      gsap.set(track, { x: safeX })
+
+      scrollTweenRef.current = gsap.to(track, {
+        x: `-=${half}`,
+        duration: 30,
+        ease: 'none',
+        repeat: -1,
+        onRepeat() {
+          gsap.set(track, { x: safeX })
+        },
+      })
+    }
+
+    start()
+
+    const observer = new ResizeObserver(() => {
+      clearTimeout(debounce)
+      debounce = setTimeout(start, 250)
     })
+    observer.observe(track)
 
     return () => {
       scrollTweenRef.current?.kill()
+      observer.disconnect()
+      clearTimeout(debounce)
     }
   }, [])
 
