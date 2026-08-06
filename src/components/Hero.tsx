@@ -6,7 +6,7 @@ function Hero() {
   const { openSheet } = useSheets()
 
   return (
-    <main className="flex flex-1 flex-col px-5 pb-8 pt-6 md:max-h-[400px] md:px-10 md:pb-12">
+    <main className="flex flex-1 flex-col px-5 pb-8 pt-10 md:max-h-[400px] md:px-10 md:pb-12 md:pt-6">
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 md:flex-row md:items-stretch md:gap-14">
         <section className="order-2 w-full md:order-none md:flex-1 md:self-end">
           <h1 className="max-w-2xl text-[36px] font-normal leading-[1.05] tracking-tighter text-stone-900">

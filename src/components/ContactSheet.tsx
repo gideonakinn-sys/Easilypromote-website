@@ -35,6 +35,9 @@ function ContactSheet() {
       />
       <div
         ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Contact Easily Promote"
         className={`fixed bottom-0 left-0 right-0 z-50 rounded-t-[28px] bg-white px-4 pb-6 pt-3 ${
           open ? '' : 'pointer-events-none invisible'
         }`}

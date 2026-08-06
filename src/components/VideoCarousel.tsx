@@ -24,6 +24,7 @@ function VideoCarousel() {
   useEffect(() => {
     const track = trackRef.current
     if (!track || slideUrls.length === 0) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const halfWidth = track.scrollWidth / 2
 

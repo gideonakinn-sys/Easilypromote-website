@@ -4,10 +4,22 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const FFMPEG = resolve(__dirname, 'ffmpeg.exe')
+const LOCAL_FFMPEG = resolve(__dirname, 'ffmpeg.exe')
+const FFMPEG = existsSync(LOCAL_FFMPEG) ? LOCAL_FFMPEG : 'ffmpeg'
 
 const SOURCE = resolve('public/videos')
 const OUTPUT = resolve('src/assets/videos')
+
+function ensureFfmpeg() {
+  try {
+    execFileSync(FFMPEG, ['-version'], { stdio: 'ignore' })
+  } catch {
+    console.error(
+      'ffmpeg not found. Add scripts/ffmpeg.exe (a portable build) or install ffmpeg on your PATH.',
+    )
+    process.exit(1)
+  }
+}
 
 mkdirSync(OUTPUT, { recursive: true })
 
@@ -17,6 +29,8 @@ if (raw.length === 0) {
   console.log('No videos found in public/videos/')
   process.exit(0)
 }
+
+ensureFfmpeg()
 
 for (const file of raw) {
   const input = resolve(SOURCE, file)
