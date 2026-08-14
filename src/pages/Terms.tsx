@@ -1,11 +1,12 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import LegalLayout from '../components/LegalLayout'
 import { termsMeta, termsSections } from '../data/terms'
 
 const TITLE_WORDS = ['Creator', 'Terms', 'and', 'Conditions']
 
 function Terms() {
-  const rootRef = useRef<HTMLElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -30,11 +31,8 @@ function Terms() {
   }, [])
 
   return (
-    <main
-      ref={rootRef}
-      className="flex flex-1 flex-col px-5 pb-20 pt-12 md:px-10 md:pb-28 md:pt-16"
-    >
-      <div className="mx-auto w-full max-w-2xl text-left">
+    <LegalLayout>
+      <div ref={rootRef} className="max-w-2xl text-left">
         <h1 className="max-w-2xl text-[28px] font-medium leading-[1.1] tracking-tighter text-stone-900 md:text-[36px]">
           {TITLE_WORDS.map((word, i) => (
             <span
@@ -85,7 +83,7 @@ function Terms() {
           ))}
         </div>
       </div>
-    </main>
+    </LegalLayout>
   )
 }
 

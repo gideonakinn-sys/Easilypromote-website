@@ -1,13 +1,12 @@
-import { Link, NavLink } from 'react-router-dom'
-import { useSheets } from './sheets'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import WaitlistDrawer from './WaitlistDrawer'
 import ContactMenu from './ContactMenu'
 
 function Navbar() {
-  const { activeSheet, openSheet } = useSheets()
-  const waitlistOpen = activeSheet === 'waitlist'
+  const { pathname } = useLocation()
+  const legalActive = pathname === '/terms' || pathname === '/privacy'
 
-  const waitlistButtonClass =
+  const ctaButtonClass =
     'rounded-full border border-stone-100 bg-brand px-5 py-2.5 text-sm font-semibold text-stone-900'
 
   return (
@@ -43,29 +42,36 @@ function Navbar() {
             <li>
               <NavLink
                 to="/terms"
-                className={({ isActive }) =>
-                  `text-xs tracking-[-0.01em] md:text-sm ${
-                    isActive
-                      ? 'font-semibold text-stone-900'
-                      : 'font-medium text-stone-600'
-                  }`
-                }
+                className={`text-xs tracking-[-0.01em] md:text-sm ${
+                  legalActive
+                    ? 'font-semibold text-stone-900'
+                    : 'font-medium text-stone-600'
+                }`}
               >
-                Terms &amp; Conditions
+                Terms &amp; Privacy
               </NavLink>
             </li>
             <ContactMenu />
           </ul>
 
-          <button
-            type="button"
-            data-sheet-trigger
-            onClick={() => openSheet('waitlist')}
-            aria-expanded={waitlistOpen}
-            className={`${waitlistButtonClass} hidden md:inline-block md:justify-self-end`}
-          >
-            Join waitlist
-          </button>
+          <div className="hidden items-center gap-2.5 md:flex md:justify-self-end">
+            <a
+              href="https://app.easilypromote.com/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-semibold text-stone-900"
+            >
+              Sign in
+            </a>
+            <a
+              href="https://app.easilypromote.com/create-account"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${ctaButtonClass}`}
+            >
+              Create account
+            </a>
+          </div>
         </div>
 
         <WaitlistDrawer />
