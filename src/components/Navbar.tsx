@@ -20,7 +20,7 @@ function Navbar() {
               alt="Easily Promote logo"
               className="h-7 w-auto md:h-8"
             />
-            <span className="text-sm font-semibold tracking-[-0.01em] text-stone-900 md:text-base">
+            <span className="hidden text-sm font-semibold tracking-[-0.01em] text-stone-900 md:inline md:text-base">
               Easily Promote
             </span>
           </Link>
@@ -38,6 +38,20 @@ function Navbar() {
                 }
               >
                 About Us
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/terms"
+                className={({ isActive }) =>
+                  `text-xs tracking-[-0.01em] md:text-sm ${
+                    isActive
+                      ? 'font-semibold text-stone-900'
+                      : 'font-medium text-stone-600'
+                  }`
+                }
+              >
+                Terms &amp; Conditions
               </NavLink>
             </li>
             <ContactMenu />
