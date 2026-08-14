@@ -16,7 +16,7 @@ export const termsMeta = {
   phone: '09011918305',
   title: 'Creator Terms and Conditions',
   intro: 'The terms on which content creators use the EasilyPromote platform.',
-  effective: 'Effective from: 8 August, 2026 · Version 1.0',
+  effective: 'Effective from: 8 August, 2026',
 }
 
 export const termsSections: TermsSection[] = [

@@ -15,7 +15,7 @@ export interface PrivacySection {
 
 export const privacyMeta = {
   title: 'EasilyPromote Privacy Policy',
-  lastUpdated: 'Last updated: [Insert Date]',
+  effective: 'Effective from: 8 August, 2026',
 }
 
 export const privacySections: PrivacySection[] = [
@@ -256,7 +256,7 @@ export const privacySections: PrivacySection[] = [
       },
       {
         type: 'paragraph',
-        text: 'To exercise these rights, contact us at [insert privacy contact email].',
+        text: 'To exercise these rights, contact us at easilypromote@gmail.com.',
       },
     ],
   },
@@ -324,11 +324,11 @@ export const privacySections: PrivacySection[] = [
       },
       {
         type: 'paragraph',
-        text: 'Email: [insert privacy contact email]',
+        text: 'Email: easilypromote@gmail.com',
       },
       {
         type: 'paragraph',
-        text: 'Address: [insert registered business address]',
+        text: 'Telephone: 09011918305',
       },
     ],
   },

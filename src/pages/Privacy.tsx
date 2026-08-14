@@ -149,7 +149,7 @@ function Privacy() {
           How EasilyPromote collects, uses, and protects your information.
         </p>
         <p className="mt-2 text-xs font-medium tracking-[-0.01em] text-stone-500">
-          {privacyMeta.lastUpdated}
+          {privacyMeta.effective}
         </p>
 
         <div className="mt-12">

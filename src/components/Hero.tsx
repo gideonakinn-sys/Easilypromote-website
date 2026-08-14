@@ -31,12 +31,12 @@ function Hero() {
             only pay once the views are verified.
           </p>
 
-          <div data-reveal="cta" className="mt-8 flex flex-col gap-3 md:hidden">
+          <div data-reveal="cta" className="mt-8 flex flex-row gap-3 md:hidden">
             <a
               href="https://app.easilypromote.com/create-account"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full rounded-full border border-stone-100 bg-brand px-4 py-3.5 text-center text-sm font-semibold text-stone-900"
+              className="flex-1 rounded-full border border-stone-100 bg-brand px-4 py-3.5 text-center text-sm font-semibold text-stone-900"
             >
               Create account
             </a>
@@ -44,7 +44,7 @@ function Hero() {
               href="https://app.easilypromote.com/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full rounded-full border border-stone-200 bg-white px-4 py-3.5 text-center text-sm font-semibold text-stone-900"
+              className="flex-1 rounded-full border border-stone-200 bg-white px-4 py-3.5 text-center text-sm font-semibold text-stone-900"
             >
               Sign in
             </a>
