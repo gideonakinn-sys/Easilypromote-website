@@ -31,8 +31,8 @@ function Hero() {
             className="mt-6 max-w-lg text-[15px] font-medium leading-[1.6] tracking-[-0.02em] text-stone-500"
           >
             EasilyPromote is a performance marketplace for businesses that want
-            proof, not promises. Fund a target, let creators deliver it, and
-            your budget stays in escrow until the views are verified.
+            proof, not promises. Set a target, let creators deliver it, and you
+            only pay once the views are verified.
           </p>
 
           <button
