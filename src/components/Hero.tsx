@@ -26,9 +26,7 @@ function Hero() {
             data-reveal="subtext"
             className="mt-6 max-w-lg text-[15px] font-medium leading-[1.6] tracking-[-0.02em] text-stone-500"
           >
-            EasilyPromote is a performance marketplace for businesses that want
-            proof, not promises. Set a target, let creators deliver it, and you
-            only pay once the views are verified.
+             EasilyPromote is a performance marketplace for businesses that want proof, not promises. Set a target, let creators deliver it, and pay only for the views that are verified.
           </p>
 
           <div data-reveal="cta" className="mt-8 flex flex-row gap-3 md:hidden">

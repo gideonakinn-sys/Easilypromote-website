@@ -91,10 +91,7 @@ function About() {
             A business sets a goal, say 250,000 views, and funds it into
             escrow. That goal is split into smaller slots that hundreds of
             creators can claim and deliver in parallel. Every submission is
-            reviewed before it ever goes public. Once it&apos;s posted, we
-            verify the views against real platform data, not self-reported
-            numbers. Only then does the money move from escrow to the creator
-            who earned it.
+            reviewed before it ever goes public. Once it&apos;s posted, we verify the views against real platform data, not self-reported numbers. Only then does the creator get paid for the views they delivered.
           </p>
         </div>
 
