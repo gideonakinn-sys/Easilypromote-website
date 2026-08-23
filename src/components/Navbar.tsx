@@ -1,5 +1,4 @@
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import WaitlistDrawer from './WaitlistDrawer'
 import ContactMenu from './ContactMenu'
 
 function Navbar() {
@@ -74,7 +73,6 @@ function Navbar() {
           </div>
         </div>
 
-        <WaitlistDrawer />
       </nav>
     </header>
   )

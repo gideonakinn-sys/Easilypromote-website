@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
-import WaitlistSheet from './WaitlistSheet'
 import ContactSheet from './ContactSheet'
 import { SheetContext, type SheetId } from './sheets'
 
@@ -42,7 +41,6 @@ export function SheetProvider({ children }: { children: ReactNode }) {
   return (
     <SheetContext.Provider value={value}>
       {children}
-      <WaitlistSheet />
       <ContactSheet />
     </SheetContext.Provider>
   )

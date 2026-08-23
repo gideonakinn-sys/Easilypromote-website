@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-export type SheetId = 'waitlist' | 'contact' | null
+export type SheetId = 'contact' | null
 
 export interface SheetContextValue {
   activeSheet: SheetId
