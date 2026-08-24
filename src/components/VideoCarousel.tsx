@@ -17,7 +17,13 @@ function shuffle<T>(arr: T[]): T[] {
 
 const slideUrls = shuffle(Object.values(videos))
 
-function VideoCarousel() {
+/**
+ * `strip` — a standalone band of clips.
+ * `fill`  — fills its parent edge to edge, used as the hero card's content.
+ */
+type Variant = 'strip' | 'fill'
+
+function VideoCarousel({ variant = 'strip' }: { variant?: Variant }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const scrollTweenRef = useRef<gsap.core.Tween | null>(null)
 
@@ -74,24 +80,31 @@ function VideoCarousel() {
 
   if (slideUrls.length === 0) {
     return (
-      <div className="flex w-full items-center justify-center rounded-3xl border border-dashed border-stone-300 bg-stone-100 px-5 py-16">
-        <p className="text-xs font-medium tracking-[-0.01em] text-stone-500">
-          Optimize your videos with npm run optimize-videos
-        </p>
+      <div className="flex w-full items-center justify-center rounded-3xl border border-dashed border-rule bg-raised px-5 py-16">
+        <p className="stamp text-ink-3">Run npm run optimize-videos to populate</p>
       </div>
     )
   }
 
   const sources = slideUrls.concat(slideUrls)
+  const fill = variant === 'fill'
 
   return (
     <div
       data-reveal="carousel"
-      className="mt-10 w-full overflow-x-hidden overflow-y-visible md:mt-14"
+      className={
+        fill
+          ? 'h-full w-full overflow-hidden'
+          : 'w-full overflow-hidden rounded-2xl bg-ink/[0.04] py-2.5'
+      }
     >
       <div
         ref={trackRef}
-        className="flex h-48 w-max gap-[8px] md:h-64"
+        className={
+          fill
+            ? 'flex h-full w-max'
+            : 'flex h-44 w-max gap-2 md:h-64'
+        }
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
       >
@@ -99,7 +112,11 @@ function VideoCarousel() {
           <video
             key={`${src}-${i}`}
             src={src}
-            className="h-full w-auto flex-shrink-0"
+            className={
+              fill
+                ? 'h-full w-auto flex-shrink-0 object-cover'
+                : 'h-full w-auto flex-shrink-0 rounded-xl object-cover'
+            }
             autoPlay
             muted
             loop
