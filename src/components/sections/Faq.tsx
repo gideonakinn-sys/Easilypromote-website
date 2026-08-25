@@ -17,10 +17,11 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
       </>
     ) : (
       <>
-        You pay EasilyPromote a single upfront fee to run the campaign. The exact
-        figure is shown to you before you fund anything — there is no invoice
-        afterwards and no variable bill at the end of the month. What each
-        creator earns is handled separately by us.
+        You pay EasilyPromote a single upfront fee to run the campaign, and the
+        calculator above quotes any campaign size at the real rate. The figure is
+        shown to you before you fund anything — there is no invoice afterwards
+        and no variable bill at the end of the month. What each creator earns is
+        handled separately by us.
       </>
     ),
   },
