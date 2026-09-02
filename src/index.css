@@ -1,24 +1,356 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-rethink: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-motterdam: "Motterdam", "Rethink Sans", ui-sans-serif, sans-serif;
-  --color-brand: #feb604;
+  /* ── Dossier identity ───────────────────────────────────────── */
+  --font-display: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Grounds — the page moves between these as you scroll */
+  --color-paper: #f5f5f4;
+  --color-raised: #fafaf9;
+  --color-manila: #e4d8c2;
+  --color-night: #1a1614;
+
+  /* Ink */
+  --color-ink: #1c1917;
+  --color-ink-2: #57534e;
+  --color-ink-3: #a8a29e;
+  --color-rule: #e7e5e4;
+
+  /* Action + earned state */
+  --color-amber: #b8720a;
+  --color-amber-soft: #f6ead7;
+  --color-seal: #8b3a2b;
+  --color-seal-soft: #f3e3df;
 }
 
 @layer base {
+  /*
+   * Root sizing, Userank-style: one design canvas projected with vw.
+   * 1rem = 16px at a 1440 desktop frame and at a 393 mobile frame, so every
+   * rem in Tailwind scales with the viewport instead of stepping at breakpoints.
+   * Clamped at both ends so ultrawide and small phones stay readable.
+   */
   html {
-    font-size: 14px;
+    font-size: clamp(14px, 4.0712vw, 17px);
+    scroll-behavior: auto;
   }
 
   @media (min-width: 768px) {
     html {
-      font-size: 13px;
+      font-size: clamp(13px, 1.1111vw, 18px);
     }
   }
 
-  body {
-    @apply bg-stone-100 font-rethink text-stone-900 antialiased;
+  :root {
+    /*
+     * One shared spring. Overshoots to 1.043 at 39% then settles.
+     * Every hover on the site uses this at 200ms, transform only.
+     */
+    --ease-spring: linear(
+      0 0%, .0059 1%, .0225 2%, .0479 3%, .0806 4%, .1191 5%, .1621 6%, .2085 7%,
+      .2573 8%, .3075 9%, .3583 10%, .4092 11%, .4594 12%, .5084 13%, .556 14%,
+      .6018 15%, .6454 16%, .6867 17%, .7256 18%, .762 19%, .7958 20%, .827 21%,
+      .8557 22%, .8818 23%, .9054 24%, .9267 25%, .9457 26%, .9626 27%, .9774 28%,
+      .9903 29%, 1.0014 30%, 1.0109 31%, 1.0189 32%, 1.0255 33%, 1.0308 34%,
+      1.035 35%, 1.0382 36%, 1.0404 37%, 1.0419 38%, 1.0427 39%, 1.0428 40%,
+      1.0425 41%, 1.0417 42%, 1.0405 43%, 1.0391 44%, 1.0374 45%, 1.0355 46%,
+      1.0335 47%, 1.0314 48%, 1.0292 49%, 1.027 50%, 1.0249 51%, 1.0227 52%,
+      1.0206 53%, 1.0186 54%, 1.0167 55%, 1.0148 56%, 1.0131 57%, 1.0114 58%,
+      1.0099 59%, 1.0085 60%, 1.0071 61%, 1.0059 62%, 1.0048 63%, 1.0039 64%,
+      1.003 65%, 1.0022 66%, 1.0015 67%, 1.0008 68%, 1.0003 69%, .9998 70%,
+      .9995 71%, .9991 72%, .9989 73%, .9986 74%, .9985 75%, .9983 76%, .9983 77%,
+      .9982 78%, .9982 79%, .9982 80%, .9982 81%, .9982 82%, .9983 83%, .9983 84%,
+      .9984 85%, .9985 86%, .9986 87%, .9987 88%, .9988 89%, .9989 90%, .999 91%,
+      .999 92%, .9991 93%, .9992 94%, .9993 95%, .9994 96%, .9995 97%, .9995 98%,
+      .9996 99%, .9997 100%
+    );
+
+    /* Driven by ScrollTrigger — the page ground changes per chapter */
+    --page-bg: var(--color-paper);
   }
+
+  html,
+  body {
+    background-color: var(--page-bg);
+  }
+
+  body {
+    @apply font-body text-ink antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /* GPU layer hint, same blanket approach Userank uses */
+  * {
+    backface-visibility: hidden;
+  }
+
+  /* Intro gate: nothing scrolls until the hero reveal has finished */
+  body.is-preloading {
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-amber);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Uppercase mono file-stamp used for every section label */
+  .stamp {
+    @apply font-mono text-[0.6875rem] uppercase tracking-[0.16em];
+  }
+
+  /* Shared micro-interaction: transform only, 200ms, one spring */
+  .springy {
+    transition: transform 0.2s var(--ease-spring);
+  }
+
+  @media (hover: hover) {
+    .springy:hover {
+      transform: scale(1.03);
+    }
+    .springy:active {
+      transform: scale(0.99);
+    }
+  }
+
+  /* Nav links nudge rather than change colour */
+  .nudge {
+    transition: transform 0.15s ease-in-out;
+  }
+
+  @media (hover: hover) {
+    .nudge:hover {
+      transform: translateX(0.25rem);
+    }
+  }
+
+  /*
+   * The hero card. A full-viewport video panel, inset from the edges and
+   * heavily rounded, that starts collapsed and tilted. The intro punches it in
+   * small, then expands it to fill the screen. Collapsing it here rather than
+   * in JS means there is never a frame of full-bleed video before the reveal.
+   */
+  .hero-card {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    display: grid;
+    /* Width tracks the stage (so no scrollbar overflow); height is the
+       hero viewport, since the stage is far taller than one screen. */
+    width: calc(100% - 1.5rem);
+    height: calc(100svh - 1.5rem);
+    overflow: hidden;
+    border-radius: 2rem;
+    clip-path: inset(0 round 2rem);
+    pointer-events: none;
+    transform: scale(0) rotate(-25deg);
+    will-change: transform;
+  }
+
+  .hero-card > * {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  /*
+   * Bottom-weighted so the headline and rail always sit on the darkest part
+   * of the frame, whatever clip happens to be passing behind them.
+   */
+  .hero-scrim {
+    background-image: linear-gradient(
+      to top,
+      rgba(26, 22, 20, 0.95) 0%,
+      rgba(26, 22, 20, 0.88) 35%,
+      rgba(26, 22, 20, 0.6) 70%,
+      rgba(26, 22, 20, 0.5) 100%
+    );
+  }
+
+  /* If the motion module never boots, the card must simply be there, and
+     the headline should close over its empty landing slot. */
+  .motion-failed .hero-card {
+    transform: none;
+  }
+
+  .motion-failed [data-approval="slot"] {
+    display: none;
+  }
+
+  /*
+   * U+20A6 is not in the Figtree subset Google Fonts serves, so the browser
+   * substitutes it. Left alone it can land on a serif, whose weight and
+   * crossbars clash badly with the digits at display sizes. This pins the
+   * substitution to system sans faces that all carry the glyph.
+   */
+  .naira {
+    font-family: Figtree, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin-right: 0.06em;
+  }
+
+  /* Range input, restyled for the dark calculator panel. */
+  .ep-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2rem;
+    background: transparent;
+    cursor: grab;
+  }
+
+  .ep-slider:active {
+    cursor: grabbing;
+  }
+
+  .ep-slider::-webkit-slider-runnable-track {
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(245, 245, 244, 0.22);
+  }
+
+  .ep-slider::-moz-range-track {
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(245, 245, 244, 0.22);
+  }
+
+  .ep-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.6875rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-amber);
+    transition: transform 0.2s var(--ease-spring);
+  }
+
+  .ep-slider::-moz-range-thumb {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-amber);
+    transition: transform 0.2s var(--ease-spring);
+  }
+
+  .ep-slider:hover::-webkit-slider-thumb,
+  .ep-slider:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+
+  .ep-slider:hover::-moz-range-thumb,
+  .ep-slider:focus-visible::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+
+  /* Inline slot that grows out of a sentence — Userank's <i> trick */
+  .grow-slot {
+    @apply inline-flex items-center overflow-hidden align-middle;
+  }
+
+  /*
+   * The step list. Plain vertical column by default, so reduced-motion and
+   * no-JS readers get all four steps. The scroll choreography adds
+   * .is-stacked to collapse them into a single grid cell for the pinned
+   * card-over-card sequence. Both live in this layer so the compound
+   * selector wins on specificity rather than fighting Tailwind utilities.
+   */
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-list.is-stacked {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .step-list.is-stacked > li {
+    grid-area: 1 / 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  body.is-preloading {
+    height: auto;
+    overflow: visible;
+  }
+  .hero-card {
+    transform: none !important;
+  }
+  [data-approval="slot"] {
+    display: none;
+  }
+}
+
+@layer components {
+  /*
+   * Chapter contrast. `body.on-dark` is toggled by darkChapters() while a
+   * dark-ground section sits under the header, which recolours to match.
+   */
+  [data-chrome] {
+    transition: color 0.35s ease, border-color 0.35s ease, background-color 0.35s ease;
+  }
+
+  /* Light-ground defaults. Kept here rather than as Tailwind colour utilities,
+     which sit in a later layer and would beat the dark-chapter overrides. */
+  [data-chrome-text] {
+    color: var(--color-ink);
+  }
+
+  [data-chrome-muted] {
+    color: var(--color-ink-2);
+  }
+
+  [data-chrome-muted].is-active {
+    color: var(--color-amber);
+  }
+
+  [data-chrome-outline] {
+    color: var(--color-ink);
+    border-color: var(--color-rule);
+    background-color: var(--color-raised);
+  }
+
+  /* Dark chapters. */
+  body.on-dark [data-chrome-text] {
+    color: var(--color-paper);
+  }
+
+  body.on-dark [data-chrome-muted] {
+    color: #b6ada6;
+  }
+
+  body.on-dark [data-chrome-muted].is-active {
+    color: #e8a33d;
+  }
+
+  body.on-dark [data-chrome-outline] {
+    color: var(--color-paper);
+    border-color: rgba(245, 245, 244, 0.28);
+    background-color: transparent;
+  }
+
 }

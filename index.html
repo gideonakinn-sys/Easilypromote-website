@@ -4,20 +4,46 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logo-mark%201.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1614" />
     <meta
       name="description"
-      content="EasilyPromote is a creator-marketing service. Pick a campaign, pay one upfront price, and vetted creators get to work — every view verified from the platform."
+      content="EasilyPromote is a performance marketing marketplace connecting Nigerian businesses with content creators. Fund a campaign upfront, approve every piece of content before it goes public, and creators earn on views verified through platform APIs."
     />
+    <meta property="og:title" content="EasilyPromote — Nothing goes live until you say so" />
+    <meta
+      property="og:description"
+      content="Fund a campaign upfront. Approve every post before it's published. Creators earn on views verified through platform APIs."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://easilypromote.com/" />
+    <link rel="canonical" href="https://easilypromote.com/" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>EasilyPromote — Get thousands of creators promoting your business</title>
+
+    <title>EasilyPromote — Nothing goes live until you say so</title>
   </head>
-  <body>
+  <body class="is-preloading">
     <div id="root"></div>
+
+    <!--
+      The intro gate locks scrolling until the hero reveal lands. If the module
+      never boots, this releases it so the page is still readable.
+    -->
+    <script>
+      // Only fires if the motion module never booted. Home.tsx stamps
+      // "motion-ready" as soon as it takes ownership of the card, so a slow
+      // intro is never mistaken for a failure.
+      setTimeout(function () {
+        if (document.documentElement.classList.contains("motion-ready")) return
+        document.body.classList.remove("is-preloading")
+        document.documentElement.classList.add("motion-failed")
+      }, 8000)
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
