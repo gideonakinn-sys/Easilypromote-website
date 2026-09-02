@@ -111,8 +111,9 @@ function Footer() {
           <p className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink-3">
             © {new Date().getFullYear()} EasilyPromote
           </p>
-          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink-3">
-            Lagos, Nigeria
+          <p className="max-w-[56ch] font-mono text-[0.6875rem] uppercase leading-[1.7] tracking-[0.12em] text-ink-3 sm:text-right">
+            Easily Promote &middot; CAC BN 9726778 &middot; A6 Stellar, Lightwell
+            Garden Estate, Dan Suleiman Street, Utako, Abuja, Nigeria
           </p>
         </div>
       </div>
