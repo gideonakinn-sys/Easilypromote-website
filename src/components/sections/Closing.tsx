@@ -42,7 +42,7 @@ function Closing() {
             rel="noopener noreferrer"
             className="springy rounded-full border border-paper/25 px-7 py-4 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-paper"
           >
-            Work as a creator
+            Earn as a creator
           </a>
         </div>
 

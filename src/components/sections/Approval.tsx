@@ -60,8 +60,9 @@ function Approval() {
             data-approval="body"
             className="mt-5 max-w-[52ch] text-[1rem] leading-[1.7] text-paper/70 md:text-[1.0625rem]"
           >
-            EasilyPromote allows you to reject any content that doesn’t follow
-            the instructions, so it doesn’t count towards your campaign.
+            EasilyPromote puts an approval gate in front of publication. Every
+            submission reaches you first. That single step is the reason brands
+            with something to protect can use creator marketing at all.
           </p>
         </div>
 

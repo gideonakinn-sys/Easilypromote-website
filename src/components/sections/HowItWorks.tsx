@@ -1,86 +1,138 @@
+import { useEffect, useRef } from 'react'
+import clipCreate from '../../assets/videos/1.mp4'
+import clipClaim from '../../assets/videos/4.mp4'
+import clipApprove from '../../assets/videos/6.mp4'
+import clipPaid from '../../assets/videos/10.mp4'
+
 const STEPS = [
   {
     n: '01',
-    body: 'Create an instruction or campaign listing for your product.',
+    title: 'Create the campaign and fund it',
+    body: 'Choose what you want promoted and the scale you want it at. You pay EasilyPromote a single upfront fee to run it. One payment, made once, at the start.',
+    note: 'Business → EasilyPromote',
+    clip: clipCreate,
   },
   {
     n: '02',
-    body: 'Fill the form, listing your objective — whether it is more streams, more sales, more downloads, awareness, traffic or another campaign goal.',
+    title: 'Creators claim their slots',
+    body: 'Your campaign appears in the creator storefront. Vetted creators browse it, claim a slot, and start producing. You are not chasing anyone in DMs.',
+    note: 'Storefront → slot claimed',
+    clip: clipClaim,
   },
   {
     n: '03',
-    body: 'Input the minimum number of creators you want on your campaign.',
+    title: 'Every submission comes to you first',
+    body: 'Content arrives in your dashboard before it is public. Approve it, or send it back with notes. This is the gate nothing gets past without you.',
+    note: 'Pre-publish approval',
+    clip: clipApprove,
   },
   {
     n: '04',
-    body: 'Decide the amount of views and reach you want your campaign to achieve.',
-  },
-  {
-    n: '05',
-    body: 'Decide which platform(s) you want the creators to use.',
-  },
-  {
-    n: '06',
-    body: 'Creators join the campaign and create engaging content following your instructions.',
-  },
-  {
-    n: '07',
-    body: 'You can reject any creator content that does not follow your instructions, so it does not count towards your campaign.',
-  },
-  {
-    n: '08',
-    body: 'At the end of your campaign, receive the data from the engagement and feedback generated around your product.',
+    title: 'Views are verified, creators are paid',
+    body: 'Once the approved content is live, views are read from the platform APIs. Creators are paid separately on those verified views — not on what anyone screenshots.',
+    note: 'EasilyPromote → Creator',
+    clip: clipPaid,
   },
 ]
 
-/**
- * The campaign sequence, read top to bottom.
- *
- * It replaced a pinned stack of sliding cards: eight steps do not fit that
- * format, and a sequence is easier to scan as one list than as a deck you have
- * to scroll through one card at a time. The rule down the left is drawn in as
- * the reader descends (see the `data-how` triggers in pages/Home).
- */
 function HowItWorks() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  /*
+   * Four more looping clips is real decoding cost, so they only run while the
+   * section is actually on screen — the same treatment userank.com gives its
+   * testimonial videos.
+   */
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const clips = Array.from(section.querySelectorAll('video'))
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        clips.forEach((clip) => {
+          if (entry.isIntersecting) {
+            const played = clip.play()
+            if (played) played.catch(() => {})
+          } else {
+            clip.pause()
+          }
+        })
+      },
+      { threshold: 0 },
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section
-      data-section="how"
-      className="relative px-5 py-24 md:px-10 md:py-32"
-    >
-      <div className="mx-auto w-full max-w-7xl">
-        <p className="stamp text-ink-3">How it works</p>
-        <h2 className="mt-4 max-w-[24ch] font-display text-[1.875rem] font-semibold leading-[1.05] tracking-[-0.03em] text-ink md:text-[3rem]">
-          Create an instruction and let the right creators drive results for
-          your product.
-        </h2>
-
-        <ol data-how="list" className="relative mt-14 md:mt-20">
-          {/* The track, and the amber line that fills it on scroll. */}
-          <span
-            aria-hidden="true"
-            className="absolute left-[1.4375rem] top-4 h-[calc(100%-4rem)] w-px bg-rule md:left-[2.25rem] md:top-8 md:h-[calc(100%-6rem)]"
-          />
-          <span
-            data-how="progress"
-            aria-hidden="true"
-            className="absolute left-[1.4375rem] top-4 h-[calc(100%-4rem)] w-px origin-top bg-amber md:left-[2.25rem] md:top-8 md:h-[calc(100%-6rem)]"
-          />
-
-          {STEPS.map((step) => (
-            <li
-              key={step.n}
-              data-how="step"
-              className="relative flex gap-5 pb-9 last:pb-0 md:gap-10 md:pb-14"
+    <section ref={sectionRef} data-section="how" className="relative">
+      <div
+        data-how="stage"
+        className="flex min-h-svh flex-col justify-center px-5 py-16 md:px-10"
+      >
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="flex items-baseline justify-between gap-6 border-b border-rule pb-5">
+            <div>
+              <p className="stamp text-ink-3">Case procedure</p>
+              <h2 className="mt-3 font-display text-[1.875rem] font-semibold leading-[1.05] tracking-[-0.03em] text-ink md:text-[2.75rem]">
+                How a campaign actually runs
+              </h2>
+            </div>
+            <p
+              data-how="counter"
+              className="hidden shrink-0 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ink-3 md:block"
             >
-              <span className="relative z-10 flex h-[2.875rem] w-[2.875rem] shrink-0 items-center justify-center rounded-full border border-rule bg-raised font-mono text-[0.75rem] font-medium tracking-[0.12em] text-amber md:h-[4.5rem] md:w-[4.5rem] md:text-[0.9375rem]">
-                {step.n}
-              </span>
-              <p className="max-w-[54ch] pt-2.5 text-[1rem] leading-[1.6] text-ink md:pt-5 md:text-[1.375rem] md:leading-[1.5]">
-                {step.body}
-              </p>
-            </li>
-          ))}
-        </ol>
+              Step 01 / 04
+            </p>
+          </div>
+
+          {/*
+            Every card sits in the same grid cell, so each one slides up and
+            covers the last while the section is pinned.
+          */}
+          <ul data-how="stack" className="step-list mt-8 md:mt-10">
+            {STEPS.map((step) => (
+              <li
+                key={step.n}
+                data-how="card"
+                className="flex min-h-[28rem] flex-col justify-between rounded-2xl border border-rule bg-raised p-7 md:min-h-[34rem] md:p-12"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <span className="font-mono text-[0.75rem] font-medium tracking-[0.16em] text-amber">
+                    {step.n}
+                  </span>
+                  <span className="stamp rounded-full border border-rule px-3 py-1 text-ink-3">
+                    {step.note}
+                  </span>
+                </div>
+
+                <div className="mt-8">
+                  <video
+                    src={step.clip}
+                    className="h-24 w-24 rounded-[1.1rem] object-cover md:h-36 md:w-36 md:rounded-[1.5rem]"
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+
+                  <h3 className="mt-6 max-w-[18ch] font-display text-[1.625rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink md:mt-8 md:text-[2.375rem]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 max-w-[58ch] text-[0.9375rem] leading-[1.65] text-ink-2 md:text-[1.0625rem]">
+                    {step.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   )
