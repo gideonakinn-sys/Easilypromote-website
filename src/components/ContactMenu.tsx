@@ -7,6 +7,9 @@ function ContactMenu() {
   const open = activeSheet === 'contact'
   const panelRef = useRef<HTMLDivElement>(null)
 
+  const navLink =
+    'nudge inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em]'
+
   useEffect(() => {
     const panel = panelRef.current
     if (!panel) return
@@ -27,11 +30,11 @@ function ContactMenu() {
       <button
         type="button"
         data-sheet-trigger
+        data-chrome
+        data-chrome-muted
         onClick={() => openSheet('contact')}
         aria-expanded={open}
-        className={`text-xs tracking-[-0.01em] md:text-sm ${
-          open ? 'font-semibold text-stone-900' : 'font-medium text-stone-600'
-        }`}
+        className={navLink + (open ? ' is-active' : '')}
       >
         Contact Us
       </button>
@@ -44,7 +47,7 @@ function ContactMenu() {
         >
           <div
             ref={panelRef}
-            className="rounded-2xl border border-stone-100 bg-white p-2 shadow-[0px_5px_13px_-5px_rgba(0,0,0,0.07),0px_2px_4px_-1px_rgba(0,0,0,0.03)]"
+            className="rounded-2xl border border-stone-200 bg-white p-2"
           >
             <a
               href="mailto:easilypromote@gmail.com"

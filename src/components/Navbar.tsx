@@ -78,7 +78,7 @@ function Navbar() {
               href={`${APP}/create-account`}
               target="_blank"
               rel="noopener noreferrer"
-              className="springy inline-block rounded-full bg-amber px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-white"
+              className="springy inline-block rounded-full bg-brand px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-stone-900"
             >
               Start a campaign
             </a>

@@ -17,7 +17,7 @@ function Approval() {
   return (
     <section
       data-section="approval"
-      className="relative px-5 py-24 text-paper md:px-10 md:py-36"
+      className="relative bg-night px-5 py-24 text-paper md:px-10 md:py-36"
     >
       <div className="mx-auto grid w-full max-w-7xl gap-14 md:grid-cols-[1fr_1fr] md:items-start md:gap-20">
         <div>

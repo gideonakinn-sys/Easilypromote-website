@@ -92,7 +92,7 @@ function Home() {
         travel out of the first and land inside the second. The card is the
         first child and carries no z-index, so both sections paint over it.
       */}
-      <div data-stage="lead" className="relative bg-night">
+      <div data-stage="lead" className="relative bg-paper">
         <HeroCard />
         <Hero />
         <Approval />

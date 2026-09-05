@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Dossier identity ───────────────────────────────────────── */
-  --font-display: "Figtree", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  /* ── Identity ──────────────────────────────────────────────── */
+  --font-display: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
 
   /* Grounds — the page moves between these as you scroll */
   --color-paper: #f5f5f4;
@@ -18,7 +18,8 @@
   --color-ink-3: #a8a29e;
   --color-rule: #e7e5e4;
 
-  /* Action + earned state */
+  /* Brand + earned state */
+  --color-brand: #feb604;
   --color-amber: #b8720a;
   --color-amber-soft: #f6ead7;
   --color-seal: #8b3a2b;
@@ -166,16 +167,16 @@
   }
 
   /*
-   * Bottom-weighted so the headline and rail always sit on the darkest part
-   * of the frame, whatever clip happens to be passing behind them.
+   * Bottom-weighted so the headline always sits on the darkest part of the
+   * frame, while the top of the video stays as clean as possible.
    */
   .hero-scrim {
     background-image: linear-gradient(
       to top,
       rgba(26, 22, 20, 0.95) 0%,
-      rgba(26, 22, 20, 0.88) 35%,
-      rgba(26, 22, 20, 0.6) 70%,
-      rgba(26, 22, 20, 0.5) 100%
+      rgba(26, 22, 20, 0.88) 30%,
+      rgba(26, 22, 20, 0.55) 60%,
+      rgba(26, 22, 20, 0.18) 100%
     );
   }
 
@@ -190,13 +191,13 @@
   }
 
   /*
-   * U+20A6 is not in the Figtree subset Google Fonts serves, so the browser
-   * substitutes it. Left alone it can land on a serif, whose weight and
-   * crossbars clash badly with the digits at display sizes. This pins the
+   * U+20A6 is not in the Rethink Sans subset Google Fonts serves, so the
+   * browser substitutes it. Left alone it can land on a serif, whose weight
+   * and crossbars clash badly with the digits at display sizes. This pins the
    * substitution to system sans faces that all carry the glyph.
    */
   .naira {
-    font-family: Figtree, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Rethink Sans', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     margin-right: 0.06em;
   }
 
@@ -340,7 +341,7 @@
   }
 
   body.on-dark [data-chrome-muted] {
-    color: #b6ada6;
+    color: #f5f5f4;
   }
 
   body.on-dark [data-chrome-muted].is-active {
