@@ -264,13 +264,22 @@ function buildScrollChoreography() {
 
   if (stage && slot) {
     const target = () => {
-      const s = slot.getBoundingClientRect()
-      const w = stage.getBoundingClientRect()
+      // offsetTop/offsetLeft ignore transforms, so the card lands on the
+      // slot's resting spot while the headline lines are still rising around
+      // it (getBoundingClientRect would read the mid-animation position).
+      let top = 0
+      let left = 0
+      let node: HTMLElement | null = slot
+      while (node && node !== stage) {
+        top += node.offsetTop
+        left += node.offsetLeft
+        node = node.offsetParent as HTMLElement | null
+      }
       return {
-        top: s.top - w.top,
-        left: s.left - w.left,
-        width: s.width,
-        height: s.height,
+        top,
+        left,
+        width: slot.offsetWidth,
+        height: slot.offsetHeight,
         radius: getComputedStyle(slot).borderTopLeftRadius,
       }
     }
