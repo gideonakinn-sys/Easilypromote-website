@@ -44,7 +44,7 @@ function Footer() {
                     rel="noopener noreferrer"
                     className="nudge inline-block text-[0.875rem] text-ink-2"
                   >
-                    Work as a creator
+                    Earn as a creator
                   </a>
                 </li>
                 <li>

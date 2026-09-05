@@ -25,7 +25,7 @@ const PRODUCTS = [
       'Earnings tracked on verified views',
     ],
     href: `${APP}/create-account`,
-    cta: 'Work as a creator',
+    cta: 'Earn as a creator',
   },
 ]
 
