@@ -22,9 +22,9 @@ function Navbar() {
   return (
     <header
       data-chrome
-      className="absolute inset-x-0 top-0 z-40 px-5 py-3.5 md:px-10 md:py-4"
+      className="absolute inset-x-0 top-0 z-40 px-7 py-4 md:px-14 md:py-5"
     >
-      <nav data-sheet-root className="relative mx-auto w-full max-w-7xl">
+      <nav data-sheet-root className="relative w-full">
         <div className="flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2.5">
             <img src="/logo-mark%201.svg" alt="" className="h-7 w-auto" />
@@ -65,12 +65,10 @@ function Navbar() {
 
           <div className="flex items-center gap-2">
             <a
-              data-chrome
-              data-chrome-outline
               href={`${APP}/login`}
               target="_blank"
               rel="noopener noreferrer"
-              className="springy hidden rounded-full border px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] sm:inline-block"
+              className="springy hidden rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] text-stone-900 sm:inline-block"
             >
               Sign in
             </a>
@@ -78,7 +76,7 @@ function Navbar() {
               href={`${APP}/create-account`}
               target="_blank"
               rel="noopener noreferrer"
-              className="springy inline-block rounded-full bg-brand px-4 py-2 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-stone-900"
+              className="springy inline-block rounded-full bg-brand px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] text-stone-900"
             >
               Start a campaign
             </a>

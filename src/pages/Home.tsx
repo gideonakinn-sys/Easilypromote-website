@@ -4,7 +4,6 @@ import {
   ScrollTrigger,
   initSmoothScroll,
   reduceMotion,
-  isMobile,
   lockScroll,
   unlockScroll,
   darkChapters,
@@ -30,6 +29,26 @@ const DARK_CHAPTERS = ['[data-section="hero"]']
 const SCRIM_DARK = 1
 const SCRIM_REST = 0.86
 
+/* The full intro only plays on the first Home visit per tab. Returning to
+   / jumps straight to the settled hero instead of replaying the lock. */
+const INTRO_PLAYED_KEY = 'ep-intro-played'
+
+function sessionHasIntroPlayed() {
+  try {
+    return window.sessionStorage.getItem(INTRO_PLAYED_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markIntroPlayed() {
+  try {
+    window.sessionStorage.setItem(INTRO_PLAYED_KEY, '1')
+  } catch {
+    /* Privacy mode: no storage, no tracking - the intro will replay. */
+  }
+}
+
 function Home() {
   const rootRef = useRef<HTMLDivElement>(null)
 
@@ -44,36 +63,77 @@ function Home() {
 
     const ctx = gsap.context(() => {
       if (reduceMotion()) {
+        // The motion styles still leave the full-bleed card in place, so the
+        // header needs its dark chrome even when the intro is skipped — and it
+        // has to give it back as the hero scrolls away.
+        markIntroPlayed()
+        document.body.classList.add('on-dark')
+        darkChapters(DARK_CHAPTERS)
         unlockScroll()
+        return
+      }
+
+      // Repeat visits skip the gate entirely: settle the card, build the
+      // scroll work, and hand the page straight over.
+      if (sessionHasIntroPlayed()) {
+        gsap.set('[data-hero="card"]', { scale: 1 })
+        gsap.set('[data-hero="scrim"]', { opacity: SCRIM_REST })
+        document.body.classList.add('on-dark')
+        darkChapters(DARK_CHAPTERS)
+        unlockScroll()
+        buildScrollChoreography()
+        ScrollTrigger.refresh()
         return
       }
 
       // Lock immediately so nothing scrolls while webfonts are still landing.
       lockScroll()
 
-      // Measuring the chip before Figtree loads gives a stale width, so hold
-      // the intro until the faces are ready (with a safety timeout).
-      const fontsReady = document.fonts
-        ? Promise.race([
-            document.fonts.ready,
-            new Promise((resolve) => setTimeout(resolve, 1500)),
-          ])
-        : Promise.resolve()
+      // The header sits over the dark video card from the start of the reveal —
+      // give it its dark chrome immediately.
+      document.body.classList.add('on-dark')
 
-      fontsReady.then(() => {
-        if (cancelled) return
-        const intro = buildIntro()
-        if (import.meta.env.DEV) {
-          // Dev handle for scrubbing the opening: __intro.pause(1.5)
-          ;(window as unknown as Record<string, unknown>).__intro = intro
+      const runIntro = async () => {
+        let playing = false
+        try {
+          // Build the intro before we wait on fonts. The reveal tweens sit
+          // hidden in their "from" state the moment they are created, so the
+          // navbar and hero copy never flash, disappear and come back — they
+          // simply are not there until their beat arrives.
+          const intro = buildIntro()
+          if (import.meta.env.DEV) {
+            // Dev handle for scrubbing the opening: __intro.pause(1.5)
+            ;(window as unknown as Record<string, unknown>).__intro = intro
+          }
+
+          // Hold the reveal until the typefaces are in, so it plays in the
+          // real font rather than the fallback (with a safety timeout).
+          const fontsReady = document.fonts
+            ? Promise.race([
+                document.fonts.ready,
+                new Promise((resolve) => setTimeout(resolve, 1500)),
+              ])
+            : Promise.resolve()
+          await fontsReady
+          if (cancelled) return
+
+          intro.eventCallback('onComplete', () => {
+            markIntroPlayed()
+            buildScrollChoreography()
+            ScrollTrigger.refresh()
+            unlockScroll()
+          })
+          intro.play()
+          playing = true
+        } finally {
+          // The scroll must always come back: if anything above threw before
+          // the reveal got to play, this releases the page instead of leaving
+          // it locked behind `is-preloading`.
+          if (!playing) unlockScroll()
         }
-        intro.eventCallback('onComplete', () => {
-          unlockScroll()
-          buildScrollChoreography()
-          ScrollTrigger.refresh()
-        })
-        intro.play()
-      })
+      }
+
+      runIntro()
     }, rootRef)
 
     return () => {
@@ -112,103 +172,54 @@ function Home() {
 /* ─────────────────────────────────────────────────────────────────────────
  * The intro.
  *
- * Beat for beat, the opening from userank.com:
+ * The small centred video frame is already on the stone ground and playing
+ * the moment the page paints. It holds there for a beat — the anticipation —
+ * then sweeps out to fill the width, and the navbar and hero copy fade in on
+ * top of the settled frame.
  *
- *   0.00  the card punches in from scale 0, rotated -25°, landing small and
- *         still tilted at -15°, while the footage INSIDE it zooms to 1.5 —
- *         so the frame shrinks as the picture grows
- *   0.30  headline enters from the left edge; paragraph enters from the right
- *         and deliberately parks short of its mark
- *   1.35  paragraph settles the rest of the way
- *   1.45  the whole head group drops in from above
- *   1.50  the card expands to fill the screen and un-rotates, footage settling
- *         back to 1:1
- *   1.65  the right rail snaps in
+ *  0.00  the small frame holds, playing; the scrim eases off
+ *  1.40  the frame expands from centre to full width (~1.3s)
+ *  2.45  as it lands, the hero copy and the header fade up
  *
- * ~2.6s, and the page cannot scroll until it lands.
+ * ~3.2s, and the page cannot scroll until it lands.
  * ───────────────────────────────────────────────────────────────────────── */
 function buildIntro() {
-  const mobile = isMobile()
-  const chip = document.querySelector<HTMLElement>('[data-hero="chip"]')
-  const chipWidth = chip ? chip.scrollWidth : 0
-
-  // Where the paragraph parks before its final settle.
-  const parkX = mobile ? '10vw' : '38vw'
+  const header = document.querySelector('header')
 
   const tl = gsap.timeline({
     paused: true,
-    delay: 0.35,
+    delay: 0.15,
     defaults: { ease: 'power2.out', duration: 0.75 },
   })
 
-  if (chip) tl.set(chip, { width: 0 }, 0)
-
   tl
-    // The card: in small and tilted…
-    .fromTo(
-      '[data-hero="card"]',
-      { scale: 0, rotate: -25, autoAlpha: 0 },
-      { scale: 0.278, rotate: -15.18, autoAlpha: 1 },
-      0,
-    )
+    // Settle the scrim while the frame holds.
     .fromTo(
       '[data-hero="scrim"]',
       { opacity: SCRIM_DARK },
-      { opacity: SCRIM_REST },
+      { opacity: SCRIM_REST, duration: 0.5 },
       0,
     )
-    // …while the footage inside it zooms the other way.
-    .fromTo('[data-reveal="carousel"]', { scale: 1 }, { scale: 1.5, duration: 1 }, 0)
-
-    // Copy enters from opposite edges.
-    .fromTo(
-      '[data-hero="head"] h1',
-      { x: '-50vw', autoAlpha: 0 },
-      { x: 0, autoAlpha: 1 },
-      0.35,
-    )
-    .fromTo(
-      '[data-hero="para"]',
-      { x: '100vw', autoAlpha: 0, scale: 0.85 },
-      { x: parkX, autoAlpha: 1, scale: 0.85 },
-      0.3,
-    )
-    // The settle. This beat is what makes it read as choreography.
-    .to(
-      '[data-hero="para"]',
-      { x: 0, scale: 1, duration: 1, ease: 'power2.inOut' },
-      1.35,
-    )
-    .fromTo(
-      '[data-hero="head"] > *',
-      { y: '-35vh' },
-      { y: '0vh', duration: 1, ease: 'power2.inOut' },
-      1.45,
-    )
-
-    // …and the card opens out to full bleed.
+    // After the hold, the frame sweeps out to fill the width.
     .to(
       '[data-hero="card"]',
-      { scale: 1, rotate: 0, duration: 1, ease: 'power1.inOut' },
-      1.5,
+      { scale: 1, duration: 1.3, ease: 'power2.inOut' },
+      1.4,
     )
-    .to(
-      '[data-reveal="carousel"]',
-      { scale: 1, duration: 1, ease: 'power1.inOut' },
-      1.5,
-    )
+    // As it lands, the copy and the header fade up together.
     .fromTo(
-      '[data-hero="rail"]',
-      { xPercent: 150, autoAlpha: 0 },
-      { xPercent: 0, autoAlpha: 1, duration: 1, ease: 'power2' },
-      1.65,
+      '[data-hero="head"] > *',
+      { y: 16, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out', stagger: 0.08 },
+      2.45,
     )
-    .fromTo('[data-hero="top"]', { autoAlpha: 0 }, { autoAlpha: 1 }, 1.7)
 
-  if (chip) {
-    tl.to(chip, { width: chipWidth, duration: 0.55, ease: 'power2.out' }, 2.1).set(
-      chip,
-      { width: 'auto' },
+  if (header) {
+    tl.fromTo(
+      header,
+      { y: -8, autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: 0.6, ease: 'power3.out' },
+      2.45,
     )
   }
 

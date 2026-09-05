@@ -139,9 +139,10 @@
 
   /*
    * The hero card. A full-viewport video panel, inset from the edges and
-   * heavily rounded, that starts collapsed and tilted. The intro punches it in
-   * small, then expands it to fill the screen. Collapsing it here rather than
-   * in JS means there is never a frame of full-bleed video before the reveal.
+   * heavily rounded, that first sits small and centred on the stone ground
+   * (the video is already playing inside it), holds for a beat, then expands
+   * to fill the width. Collapsing it here rather than in JS means there is
+   * never a frame of full-bleed video before the reveal.
    */
   .hero-card {
     position: absolute;
@@ -156,7 +157,7 @@
     border-radius: 2rem;
     clip-path: inset(0 round 2rem);
     pointer-events: none;
-    transform: scale(0) rotate(-25deg);
+    transform: scale(0.25);
     will-change: transform;
   }
 

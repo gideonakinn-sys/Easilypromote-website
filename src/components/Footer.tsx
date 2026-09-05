@@ -6,9 +6,9 @@ function Footer() {
   return (
     <footer
       data-section="footer"
-      className="border-t border-rule px-5 py-12 md:px-10 md:py-16"
+      className="border-t border-rule px-7 py-12 md:px-14 md:py-16"
     >
-      <div className="mx-auto w-full max-w-7xl">
+      <div className="relative w-full">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-[34ch]">
             <div className="flex items-center gap-2.5">

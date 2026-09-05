@@ -112,6 +112,7 @@ function VideoCarousel({ variant = 'strip' }: { variant?: Variant }) {
           <video
             key={`${src}-${i}`}
             src={src}
+            aria-hidden="true"
             className={
               fill
                 ? 'h-full w-auto flex-shrink-0 object-cover'
@@ -121,7 +122,7 @@ function VideoCarousel({ variant = 'strip' }: { variant?: Variant }) {
             muted
             loop
             playsInline
-            preload="auto"
+            preload={fill && i >= slideUrls.length ? 'metadata' : 'auto'}
           />
         ))}
       </div>

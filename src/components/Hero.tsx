@@ -1,3 +1,5 @@
+import { Fragment } from 'react'
+
 const HEADLINE = [
   'Deploy',
   'thousands',
@@ -24,20 +26,20 @@ function Hero() {
       {/* Top padding clears the fixed header, which floats over the card. */}
       <div className="relative z-10 flex h-full flex-col justify-end px-7 pb-8 pt-24 md:px-14 md:pb-12 md:pt-28">
         <div data-hero="head" className="md:max-w-[72%]">
-          <h1 className="max-w-[13ch] font-display text-[2.75rem] font-semibold leading-[0.94] tracking-[-0.045em] md:text-[5.25rem]">
+          <h1 className="font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.02em] md:text-[4.25rem]">
             {HEADLINE.map((word, i) => (
-              <span
-                key={i}
-                className="-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom"
-              >
-                <span
-                  data-hero="word"
-                  className="inline-block will-change-transform"
-                >
-                  {word}
+              <Fragment key={i}>
+                <span className="-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom">
+                  <span
+                    data-hero="word"
+                    className="inline-block will-change-transform"
+                  >
+                    {word}
+                  </span>
+                  {i < HEADLINE.length - 1 ? '\u00A0' : ''}
                 </span>
-                {i < HEADLINE.length - 1 ? ' ' : ''}
-              </span>
+                {i === 3 ? <br /> : null}
+              </Fragment>
             ))}
           </h1>
 
