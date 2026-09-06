@@ -3,29 +3,31 @@ const APP = 'https://app.easilypromote.com'
 const PRODUCTS = [
   {
     tag: 'For businesses',
-    title: 'The brand app',
-    body: 'Create and fund campaigns, review every submission before it is published, watch delivery on a live dashboard, and manage your wallet in one place.',
+    title: 'What would your marketing look like with thousands of creators working for you?',
+    body: 'Create a campaign, set your objectives and put your product in front of thousands of creators who can create and distribute content to their audiences.',
     points: [
-      'Create and fund a campaign',
-      'Pre-publish content approval',
-      'Delivery dashboard with verified views',
-      'Wallet and campaign history',
+      'Create campaigns built around your objectives',
+      'Reach thousands of creators at scale',
+      'Set your target reach and views',
+      'Track campaign performance and audience feedback',
     ],
     href: `${APP}/create-account`,
     cta: 'Start a campaign',
+    variant: 'primary',
   },
   {
     tag: 'For creators',
-    title: 'The creator app',
-    body: 'Browse a storefront of live campaigns, claim the slots you want, submit your content for approval, and track what you have earned through the slot lifecycle.',
+    title: 'Look at all the content you post. How many of those posts actually make you money?',
+    body: 'EasilyPromote helps you earn from the content you already create. Join campaigns, create content for products you believe in, and get paid for the views you deliver.',
     points: [
-      'Campaign storefront',
-      'Claim slots that suit your audience',
-      'Submit content, get approval',
-      'Earnings tracked on verified views',
+      'Browse campaigns that fit your style and audience',
+      'Create and post content following the instructions',
+      'Get paid for the views you deliver',
+      'Withdraw earnings (on scheduled payout dates)',
     ],
     href: `${APP}/create-account`,
     cta: 'Earn as a creator',
+    variant: 'outline',
   },
 ]
 
@@ -36,8 +38,7 @@ function Products() {
       className="relative bg-manila px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <p className="stamp text-ink/45">Two sides of the file</p>
-        <h2 className="mt-4 max-w-[20ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.03em] text-ink md:text-[3rem]">
+        <h2 className="max-w-[20ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.03em] text-ink md:text-[3rem]">
           One marketplace, built from both ends.
         </h2>
 
@@ -46,13 +47,13 @@ function Products() {
             <article
               key={p.title}
               data-products="card"
-              className="flex flex-col rounded-2xl border border-ink/10 bg-raised/80 p-7 md:p-10"
+              className="flex flex-col rounded-[2rem] border border-ink/10 bg-raised/80 p-7 md:p-10"
             >
-              <p className="stamp text-amber">{p.tag}</p>
-              <h3 className="mt-4 font-display text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.025em] text-ink md:text-[2.25rem]">
+              <p className="text-sm font-semibold text-amber">{p.tag}</p>
+              <h3 className="mt-4 font-display text-[1.375rem] font-semibold leading-[1.15] tracking-[-0.025em] text-ink md:text-[1.625rem]">
                 {p.title}
               </h3>
-              <p className="mt-4 max-w-[46ch] text-[0.9375rem] leading-[1.65] text-ink-2 md:text-[1rem]">
+              <p className="mt-4 text-[0.9375rem] leading-[1.65] text-ink-2 md:text-[1rem]">
                 {p.body}
               </p>
 
@@ -72,7 +73,11 @@ function Products() {
                 href={p.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="springy mt-8 inline-block self-start rounded-full bg-ink px-6 py-3 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-paper"
+                className={`springy mt-8 inline-block self-start rounded-full px-6 py-3 text-sm font-semibold tracking-[-0.01em] ${
+                  p.variant === 'outline'
+                    ? 'border border-stone-200 bg-white text-stone-900'
+                    : 'bg-brand text-stone-900'
+                }`}
               >
                 {p.cta}
               </a>

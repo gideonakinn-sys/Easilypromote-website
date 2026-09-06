@@ -101,8 +101,8 @@ function Faq() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-20">
           <div className="md:sticky md:top-16 md:h-fit">
-            <p className="stamp text-ink-3">On the record</p>
-            <h2 className="mt-4 max-w-[14ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.03em] text-ink md:text-[2.75rem]">
+            <p className="text-sm font-semibold text-ink-3">On the record</p>
+            <h2 className="mt-4 max-w-[14ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.03em] text-ink md:text-[3rem]">
               The questions people actually ask.
             </h2>
             <p className="mt-5 max-w-[36ch] text-[0.9375rem] leading-[1.65] text-ink-2">
@@ -111,7 +111,7 @@ function Faq() {
             </p>
             <a
               href="mailto:easilypromote@gmail.com"
-              className="springy mt-6 inline-block rounded-full border border-rule bg-raised px-5 py-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink"
+              className="springy mt-6 inline-block rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] text-stone-900"
             >
               Email us
             </a>
@@ -121,12 +121,12 @@ function Faq() {
             {FAQS.map((item) => (
               <details key={item.q} data-faq="item" className="group py-5">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6">
-                  <span className="max-w-[42ch] font-display text-[1.125rem] font-semibold leading-[1.35] tracking-[-0.02em] text-ink md:text-[1.375rem]">
+                  <span className="max-w-[42ch] text-[1.0625rem] font-semibold leading-[1.4] tracking-[-0.02em] text-ink md:text-[1.25rem]">
                     {item.q}
                   </span>
                   <span
                     aria-hidden="true"
-                    className="mt-1 shrink-0 font-mono text-[1rem] leading-none text-amber transition-[rotate] duration-200 ease-[var(--ease-spring)] group-open:rotate-45"
+                    className="mt-0.5 shrink-0 text-base leading-none text-amber transition-[rotate] duration-200 ease-[var(--ease-spring)] group-open:rotate-45"
                   >
                     +
                   </span>

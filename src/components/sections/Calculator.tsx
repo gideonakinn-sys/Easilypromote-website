@@ -103,7 +103,6 @@ function Calculator() {
     () => atPosition(tiers, clamped),
     [tiers, clamped],
   )
-  const perView = price / views
 
   return (
     <section
@@ -111,7 +110,7 @@ function Calculator() {
       className="relative bg-night px-5 py-24 text-paper md:px-10 md:py-32"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <p data-calc="reveal" className="stamp text-paper/45">
+        <p data-calc="reveal" className="text-sm font-semibold text-paper/45">
           What it costs
         </p>
         <h2
@@ -124,9 +123,8 @@ function Calculator() {
           data-calc="reveal"
           className="mt-5 max-w-[54ch] text-[1rem] leading-[1.7] text-paper/70"
         >
-          Campaigns are priced by the scale you choose, and the rate improves as
-          the campaign gets bigger. You see the figure here before you fund
-          anything.
+          Campaigns are priced by the scale you choose. You see the figure here
+          before you fund anything.
         </p>
 
         <div
@@ -137,7 +135,7 @@ function Calculator() {
           <div>
             <label
               htmlFor="views-slider"
-              className="stamp block text-paper/45"
+              className="block text-sm font-semibold text-paper/45"
             >
               Target views
             </label>
@@ -164,7 +162,7 @@ function Calculator() {
               className="ep-slider mt-8 w-full"
             />
 
-            <div className="mt-3 flex justify-between font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-paper/40">
+            <div className="mt-3 flex justify-between text-xs font-medium text-paper/40">
               <span>{compactViews(tiers[0].views)}</span>
               <span>{compactViews(tiers[max].views)}</span>
             </div>
@@ -172,7 +170,7 @@ function Calculator() {
 
           {/* ── The quote ───────────────────────────────────── */}
           <div className="md:border-l md:border-paper/15 md:pl-14">
-            <p className="stamp text-amber">You pay upfront</p>
+            <p className="text-sm font-semibold text-brand">You pay upfront</p>
             <p
               aria-live="polite"
               className="mt-4 font-display text-[2.25rem] font-semibold leading-none tracking-[-0.04em] tabular-nums md:text-[3.25rem]"
@@ -182,13 +180,6 @@ function Calculator() {
             </p>
 
             <dl className="mt-8 border-t border-paper/15 text-[0.875rem]">
-              <div className="flex justify-between gap-4 border-b border-paper/15 py-3">
-                <dt className="text-paper/55">Effective rate</dt>
-                <dd className="tabular-nums text-paper">
-                  <Naira />
-                  {perView.toFixed(2)} per view
-                </dd>
-              </div>
               <div className="flex justify-between gap-4 py-3">
                 <dt className="text-paper/55">Payments</dt>
                 <dd className="text-paper">One, before the campaign starts</dd>
@@ -199,22 +190,12 @@ function Calculator() {
               href={`${APP}/create-account`}
               target="_blank"
               rel="noopener noreferrer"
-              className="springy mt-8 inline-block rounded-full bg-amber px-6 py-3.5 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-white"
+              className="springy mt-8 inline-block rounded-full bg-brand px-6 py-3.5 text-sm font-semibold tracking-[-0.01em] text-stone-900"
             >
               Start a campaign
             </a>
           </div>
         </div>
-
-        <p
-          data-calc="reveal"
-          className="mt-6 max-w-[68ch] text-[0.875rem] leading-[1.65] text-paper/50"
-        >
-          This is a single upfront fee for running the campaign. It is not
-          conditional on results and it is not held against delivery. What each
-          creator earns is a separate flow, paid on views verified through
-          platform APIs. Final pricing is confirmed in the app before you fund.
-        </p>
       </div>
     </section>
   )

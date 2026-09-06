@@ -235,7 +235,7 @@
     margin-top: -0.6875rem;
     border: 0;
     border-radius: 999px;
-    background: var(--color-amber);
+    background: var(--color-brand);
     transition: transform 0.2s var(--ease-spring);
   }
 
@@ -244,7 +244,7 @@
     height: 1.5rem;
     border: 0;
     border-radius: 999px;
-    background: var(--color-amber);
+    background: var(--color-brand);
     transition: transform 0.2s var(--ease-spring);
   }
 
@@ -261,6 +261,29 @@
   /* Inline slot that grows out of a sentence — Userank's <i> trick */
   .grow-slot {
     @apply inline-flex items-center overflow-hidden align-middle;
+  }
+
+  /*
+   * The step list. Plain vertical column by default, so reduced-motion and
+   * no-JS readers get all four steps. The scroll choreography adds
+   * .is-stacked to collapse them into a single grid cell for the pinned
+   * card-over-card sequence. Both live in this layer so the compound
+   * selector wins on specificity rather than fighting Tailwind utilities.
+   */
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-list.is-stacked {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .step-list.is-stacked > li {
+    grid-area: 1 / 1;
   }
 }
 

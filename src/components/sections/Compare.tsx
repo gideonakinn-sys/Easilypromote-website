@@ -50,7 +50,7 @@ function Compare() {
       className="relative px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto w-full max-w-7xl">
-        <p className="stamp text-ink-3">The alternatives</p>
+        <p className="text-sm font-semibold text-ink-3">The alternatives</p>
         <h2 className="mt-4 max-w-[22ch] font-display text-[2rem] font-semibold leading-[1.04] tracking-[-0.03em] text-ink md:text-[3rem]">
           Compared with the two things you would otherwise do.
         </h2>
@@ -63,13 +63,13 @@ function Compare() {
             <thead>
               <tr className="bg-raised">
                 <th className="w-[18%] px-5 py-4" />
-                <th className="w-[30%] border-l border-rule bg-amber-soft px-5 py-4 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-amber">
+                <th className="w-[30%] border-l border-rule bg-brand/10 px-5 py-4 text-sm font-semibold text-stone-900">
                   EasilyPromote
                 </th>
-                <th className="w-[26%] border-l border-rule px-5 py-4 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ink-3">
+                <th className="w-[26%] border-l border-rule px-5 py-4 text-sm font-semibold text-ink-2">
                   Doing it yourself
                 </th>
-                <th className="w-[26%] border-l border-rule px-5 py-4 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ink-3">
+                <th className="w-[26%] border-l border-rule px-5 py-4 text-sm font-semibold text-ink-2">
                   Hiring an agency
                 </th>
               </tr>
@@ -83,17 +83,19 @@ function Compare() {
                 >
                   <th
                     scope="row"
-                    className="px-5 py-5 align-top font-mono text-[0.6875rem] uppercase leading-[1.5] tracking-[0.1em] text-ink-2"
+                    className="px-5 py-5 align-top text-sm font-medium text-ink-2"
                   >
                     {row.label}
                   </th>
                   <td
                     className={`border-l border-rule px-5 py-5 align-top text-[0.875rem] leading-[1.6] text-ink ${
-                      row.highlight ? 'bg-amber-soft/60' : 'bg-raised/60'
+                      row.highlight ? 'bg-brand/10' : 'bg-raised/60'
                     }`}
                   >
                     {row.highlight ? (
-                      <span className="stamp mb-2 block text-seal">Only here</span>
+                      <span className="mb-2 block text-xs font-semibold text-seal">
+                        Only here
+                      </span>
                     ) : null}
                     {row.ours}
                   </td>
@@ -109,7 +111,7 @@ function Compare() {
           </table>
         </div>
 
-        <p className="mt-4 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink-3 md:hidden">
+        <p className="mt-4 text-xs font-medium text-ink-3 md:hidden">
           Scroll the table sideways
         </p>
       </div>
