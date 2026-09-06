@@ -54,8 +54,9 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: (
       <>
         Once approved content is live on the creator’s account, view counts are
-        read from the platform’s own API rather than from anything the creator
-        sends us. That figure is what appears on your dashboard, and it is what
+        read from the platform’s own API — TikTok, Instagram, YouTube or X,
+        with the creator’s authorisation — rather than from anything the
+        creator sends us. That figure is what appears on your dashboard, and it is what
         creator earnings are calculated from.
       </>
     ),

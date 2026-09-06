@@ -40,9 +40,9 @@ function Approval() {
           data-approval="body"
           className="mx-auto mt-5 max-w-[52ch] text-[1rem] leading-[1.7] text-ink-2 md:text-[1.0625rem]"
         >
-          Stop gambling on single influencers. Launch a coordinated campaign
-          with thousands of creators, scale your organic reach, and drive
-          measurable ROI. You set the brief; we handle the creators,
+          Stop relying on one influencer at a time. Launch a coordinated
+          campaign with thousands of creators, scale your organic reach, and
+          drive measurable ROI. You set the brief; we handle the creators,
           management, and tracking.
         </p>
       </div>
