@@ -2,7 +2,7 @@ function Approval() {
   return (
     <section
       data-section="approval"
-      className="relative px-5 py-24 text-ink md:px-10 md:py-36"
+      className="relative px-5 py-20 text-ink md:px-10 md:py-24"
     >
       <div className="mx-auto w-full max-w-7xl">
         {/*

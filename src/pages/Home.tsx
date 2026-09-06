@@ -11,7 +11,8 @@ import {
 import Hero from '../components/Hero'
 import HeroCard from '../components/HeroCard'
 import Approval from '../components/sections/Approval'
-import HowItWorks from '../components/sections/HowItWorks'
+import CampaignFlow from '../components/sections/CampaignFlow'
+import Showcase from '../components/sections/Showcase'
 import Products from '../components/sections/Products'
 import Compare from '../components/sections/Compare'
 import Calculator from '../components/sections/Calculator'
@@ -158,7 +159,8 @@ function Home() {
         <Approval />
       </div>
 
-      <HowItWorks />
+      <CampaignFlow />
+      <Showcase />
       <Products />
       <Compare />
       <Calculator />
@@ -234,21 +236,6 @@ function buildIntro() {
  * grounds and the shrinking hero that give userank.com its feel.
  * ───────────────────────────────────────────────────────────────────────── */
 function buildScrollChoreography() {
-  /*
-   * Collapse the step list into its single grid cell FIRST. Doing this removes
-   * roughly three viewport heights from the document, so any trigger created
-   * before it would be measured against a layout that no longer exists.
-   */
-  const stack = document.querySelector<HTMLElement>('[data-how="stack"]')
-  const cards = gsap.utils.toArray<HTMLElement>('[data-how="card"]')
-  const counter = document.querySelector<HTMLElement>('[data-how="counter"]')
-  const hasStack = Boolean(stack) && cards.length > 1
-
-  if (hasStack) {
-    stack!.classList.add('is-stacked')
-    gsap.set(cards.slice(1), { yPercent: 100 })
-  }
-
   /* 1 ── The handoff.
    *
    * The full-bleed card flies down out of the hero and shrinks onto the empty
@@ -357,34 +344,18 @@ function buildScrollChoreography() {
     },
   )
 
-  /* 3 ── The pinned stack: four steps sharing one grid cell. */
-  if (hasStack) {
-    const stackTl = gsap.timeline({ defaults: { ease: 'none' } })
-    cards.slice(1).forEach((card) => {
-      stackTl.to(card, { yPercent: 0, duration: 1 })
-    })
-
-    ScrollTrigger.create({
-      trigger: '[data-how="stage"]',
-      start: 'top top',
-      end: `+=${(cards.length - 1) * 100}%`,
-      pin: true,
-      anticipatePin: 1,
-      scrub: true,
-      // The pin changes document height, so it must refresh before every
-      // trigger that sits below it computes its own start and end.
-      refreshPriority: 1,
-      animation: stackTl,
-      onUpdate: (self) => {
-        if (!counter) return
-        const step = Math.min(
-          cards.length,
-          Math.floor(self.progress * cards.length) + 1,
-        )
-        counter.textContent = `Step 0${step} / 0${cards.length}`
-      },
-    })
-  }
+  /* 2.5 ── Campaign flow tabs above the step deck. */
+  gsap.from('[data-flow="tabs"], [data-flow="panel"]', {
+    y: 20,
+    autoAlpha: 0,
+    duration: 0.7,
+    ease: 'power3.out',
+    stagger: 0.1,
+    scrollTrigger: {
+      trigger: '[data-section="campaign-flow"]',
+      start: 'top 70%',
+    },
+  })
 
   /* 4 ── Product cards. */
   gsap.from('[data-products="card"]', {
