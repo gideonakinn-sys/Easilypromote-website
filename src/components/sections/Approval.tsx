@@ -18,7 +18,7 @@ function Approval() {
           <span data-approval="line" className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <span>creators</span>
             <span
-              data-approval="slot"
+              data-approval="landing"
               aria-hidden="true"
               className="h-10 w-10 shrink-0 rounded-lg md:h-16 md:w-16 md:rounded-xl"
             />

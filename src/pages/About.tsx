@@ -67,7 +67,7 @@ function About() {
           <p>
             So we made the approval step the centre of the product. A business
             creates a campaign and funds it upfront, so the cost is known before
-            anything begins. The campaign is split into slots that creators claim
+            anything begins. The campaign is split into placements that creators claim
             from a storefront. Every submission comes back to the business for
             review, and nothing is published without that approval. Once approved
             content is live, views are read from the platforms themselves, and
@@ -83,7 +83,7 @@ function About() {
             And to the creators reading this — we see you too. We know what it is
             like to be talented and consistent and still overlooked because your
             following is not big enough yet. On EasilyPromote the campaigns are
-            open. You claim a slot, you make the work, you get it approved, and
+            open. You claim a placement, you make the work, you get it approved, and
             you earn on the views you delivered. Not on how many followers you
             arrived with.
           </p>

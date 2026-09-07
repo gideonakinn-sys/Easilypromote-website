@@ -49,7 +49,7 @@ export const privacySections: PrivacySection[] = [
         type: 'list',
         items: [
           '**Businesses** who create and fund campaigns ("Brands")',
-          '**Creators** who claim campaign slots and earn by delivering verified views',
+          '**Creators** who claim campaign placements and earn by delivering verified views',
           '**Visitors** to our marketing website',
           "**Admin users** who operate the Platform's internal console",
         ],
@@ -105,7 +105,7 @@ export const privacySections: PrivacySection[] = [
       },
       {
         type: 'paragraph',
-        text: 'We only access what is necessary to verify campaign delivery and calculate payouts. We do not access private messages, contacts, or content unrelated to a claimed campaign slot.',
+        text: 'We only access what is necessary to verify campaign delivery and calculate payouts. We do not access private messages, contacts, or content unrelated to a claimed campaign placement.',
       },
       {
         type: 'heading',
@@ -135,7 +135,7 @@ export const privacySections: PrivacySection[] = [
         items: [
           'Create and manage accounts across the Brand, Creator, and Admin surfaces',
           'Verify identities and business legitimacy (fraud and abuse prevention)',
-          'Facilitate campaign creation, slot claiming, and content submission',
+          'Facilitate campaign creation, placement claiming, and content submission',
           'Verify creator delivery through platform APIs and calculate accurate payouts',
           'Process escrow funding, holds, releases, and wallet transactions',
           'Enable the pre-publish content approval workflow between Brands and Creators',
@@ -180,11 +180,11 @@ export const privacySections: PrivacySection[] = [
         type: 'table',
         headers: ['Recipient', 'Purpose'],
         rows: [
-          ['Brands', 'Creator profile and delivery data relevant to a claimed campaign slot'],
+          ['Brands', 'Creator profile and delivery data relevant to a claimed campaign placement'],
           ['Creators', 'Campaign brief details published by a Brand'],
           ['Payment processors', 'To fund escrow, process payouts, and handle wallet transactions'],
           ['Identity verification providers', 'To confirm Brand or Creator identity'],
-          ['Social media platforms (via API)', 'To verify views/engagement tied to a claimed slot'],
+          ['Social media platforms (via API)', 'To verify views/engagement tied to a claimed placement'],
           ['Service providers', 'Hosting, analytics, customer support tooling — bound by confidentiality obligations'],
           ['Regulators / law enforcement', 'Where legally required, or to protect rights, safety, or prevent fraud'],
           ['Business transfers', 'In connection with a merger, acquisition, or asset sale, subject to continued protection of your data'],

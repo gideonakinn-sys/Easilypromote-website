@@ -262,7 +262,7 @@ function buildScrollChoreography() {
    * so it stays correct at any viewport size.
    */
   const stage = document.querySelector<HTMLElement>('[data-stage="lead"]')
-  const slot = document.querySelector<HTMLElement>('[data-approval="slot"]')
+  const slot = document.querySelector<HTMLElement>('[data-approval="landing"]')
 
   if (stage && slot) {
     const target = () => {

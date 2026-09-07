@@ -1,7 +1,7 @@
 const ROWS = [
   {
     label: 'Finding creators',
-    ours: 'Creators browse your campaign in the storefront and claim slots themselves.',
+    ours: 'Creators browse your campaign in the storefront and claim placements themselves.',
     diy: 'Cold DMs, one creator at a time, most never reply.',
     agency: 'A fixed roster you did not pick.',
     highlight: false,

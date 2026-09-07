@@ -45,7 +45,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
         You send it back with notes, and it is not published. Every submission
         goes through your approval before it can go public — that gate is the
         core of how the platform works. A creator can revise and resubmit, or the
-        slot can go to someone else.
+        placement can go to someone else.
       </>
     ),
   },
@@ -66,9 +66,9 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: (
       <>
         Creators on the platform browse a storefront of live campaigns and claim
-        the slots that fit their audience. You do not have to source anyone or
+        the placements that fit their audience. You do not have to source anyone or
         negotiate individually. Because approval sits before publication, you
-        keep control of the output regardless of who claims a slot.
+        keep control of the output regardless of who claims a placement.
       </>
     ),
   },
@@ -77,7 +77,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: (
       <>
         As soon as it is funded, your campaign is visible in the creator
-        storefront and creators can begin claiming slots. From there the pace is
+        storefront and creators can begin claiming placements. From there the pace is
         set by production and by how fast submissions come back to you for
         approval.
       </>
@@ -87,9 +87,9 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     q: 'I am a creator. How do I get paid?',
     a: (
       <>
-        Claim a slot on a live campaign, submit your content, and get it
+        Claim a placement on a live campaign, submit your content, and get it
         approved. Once it is published and views are verified through the
-        platform APIs, your earnings are tracked against that slot in the creator
+        platform APIs, your earnings are tracked against that placement in the creator
         app. You are paid on the views you actually delivered.
       </>
     ),
