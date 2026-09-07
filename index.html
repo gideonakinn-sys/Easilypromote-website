@@ -15,8 +15,8 @@
       content="Fund a campaign upfront. Approve every post before it's published. Creators earn on views verified through platform APIs."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://easilypromote.com/" />
-    <link rel="canonical" href="https://easilypromote.com/" />
+    <meta property="og:url" content="https://www.easilypromote.com/" />
+    <link rel="canonical" href="https://www.easilypromote.com/" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,6 +29,32 @@
   </head>
   <body class="is-preloading">
     <div id="root"></div>
+
+    <!--
+      The home page is client-rendered so the hero can animate in from a hidden
+      state, which leaves nothing in the markup for a reader that does not run
+      JavaScript. The other routes are prerendered (scripts/prerender.mjs); this
+      is the equivalent for this one.
+    -->
+    <noscript>
+      <h1>EasilyPromote</h1>
+      <p>
+        EasilyPromote is a performance marketing marketplace connecting
+        Nigerian businesses with content creators. A business funds a campaign
+        upfront, creators claim placements and produce the content, and every
+        submission is approved by the business before it is published. Once
+        approved content is live on the creator's own account, view counts are
+        read from the platform's API — TikTok, Instagram, YouTube or X, with
+        the creator's authorisation — and creators are paid on those verified
+        views.
+      </p>
+      <p>
+        <a href="/about">About EasilyPromote</a> &middot;
+        <a href="/terms">Terms and Conditions</a> &middot;
+        <a href="/privacy">Privacy Policy</a> &middot;
+        <a href="mailto:easilypromote@gmail.com">easilypromote@gmail.com</a>
+      </p>
+    </noscript>
 
     <!--
       The intro gate locks scrolling until the hero reveal lands. If the module
