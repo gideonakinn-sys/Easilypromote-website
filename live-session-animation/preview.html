@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ad Engagement Animation — Dynamic Views, Likes & Comments</title>
+  <title>TikTok Feed Simulation — Auto-Swipe, Views, Likes & Comments</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -15,7 +15,7 @@
     }
 
     body {
-      background: #090a0d;
+      background: #08090c;
       color: #fff;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
@@ -29,24 +29,32 @@
 
     .header-info {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .header-info h1 {
       font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       background: linear-gradient(135deg, #ffffff 0%, #a8a29e 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .header-info p {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       color: #78716c;
     }
 
+    .wrapper-with-nav {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Device Container */
     .device-container {
       position: relative;
       width: 380px;
@@ -57,10 +65,36 @@
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.12);
       background: #000;
       user-select: none;
-      cursor: pointer;
+      touch-action: none;
+      cursor: grab;
     }
 
-    video {
+    .device-container:active {
+      cursor: grabbing;
+    }
+
+    /* Vertical Slides Track */
+    .slides-track {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .slide {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .slide video {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -69,21 +103,22 @@
       pointer-events: none;
     }
 
-    /* Cinematic Vignette */
+    /* Cinematic Vignette Overlay */
     .overlay-scrim {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.6) 0%,
-        rgba(0, 0, 0, 0.05) 25%,
-        rgba(0, 0, 0, 0.1) 60%,
-        rgba(0, 0, 0, 0.8) 100%
+        rgba(0, 0, 0, 0.65) 0%,
+        rgba(0, 0, 0, 0.05) 20%,
+        rgba(0, 0, 0, 0.05) 55%,
+        rgba(0, 0, 0, 0.85) 100%
       );
       pointer-events: none;
+      z-index: 10;
     }
 
-    /* Top Stats Bar: Views Surging Counter */
+    /* Top Stats Bar: Views Counter */
     .top-stats-bar {
       position: absolute;
       top: 18px;
@@ -92,58 +127,44 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      z-index: 25;
+      z-index: 28;
       pointer-events: none;
     }
 
-    .views-surge-pill {
+    .views-pill {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       background: rgba(14, 16, 21, 0.75);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      padding: 7px 14px;
+      padding: 6px 14px;
       border-radius: 9999px;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
     }
 
     .views-icon-wrap {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: linear-gradient(135deg, #0ea5e9, #2563eb);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+      box-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
     }
 
     .views-icon-wrap svg {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
       fill: none;
       stroke: #fff;
       stroke-width: 2.2;
     }
 
-    .views-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .views-label {
-      font-size: 0.62rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #94a3b8;
-    }
-
     .views-number {
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       color: #f8fafc;
@@ -153,15 +174,15 @@
     }
 
     .views-badge-delta {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
       color: #22c55e;
       background: rgba(34, 197, 94, 0.15);
-      padding: 1px 6px;
-      border-radius: 6px;
+      padding: 1px 5px;
+      border-radius: 5px;
       border: 1px solid rgba(34, 197, 94, 0.3);
       opacity: 0;
-      transform: translateY(3px);
+      transform: translateY(2px);
       transition: all 0.25s ease;
     }
 
@@ -174,14 +195,14 @@
       background: rgba(14, 16, 21, 0.75);
       backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 9999px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #cbd5e1;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .campaign-dot {
@@ -192,16 +213,16 @@
       box-shadow: 0 0 8px #22c55e;
     }
 
-    /* Floating Ad Comments Overlay (TikTok / Reels Ad style) */
+    /* Pop-Up Ad Comments */
     .comments-stream-container {
       position: absolute;
       left: 16px;
       bottom: 95px;
-      width: 78%;
+      width: 76%;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      z-index: 22;
+      z-index: 25;
       pointer-events: none;
     }
 
@@ -209,7 +230,7 @@
       display: flex;
       align-items: flex-start;
       gap: 9px;
-      background: rgba(14, 16, 22, 0.82);
+      background: rgba(14, 16, 22, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       padding: 8px 12px;
@@ -248,13 +269,13 @@
     }
 
     .ad-comment-avatar {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       color: #fff;
       flex-shrink: 0;
@@ -274,13 +295,13 @@
     }
 
     .ad-comment-user {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #e2e8f0;
     }
 
     .ad-comment-badge {
-      font-size: 0.55rem;
+      font-size: 0.52rem;
       background: rgba(255, 255, 255, 0.12);
       color: #94a3b8;
       padding: 1px 4px;
@@ -289,7 +310,7 @@
     }
 
     .ad-comment-text {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #f1f5f9;
       line-height: 1.3;
       word-break: break-word;
@@ -306,50 +327,88 @@
     }
 
     .ad-comment-like svg {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
       fill: #f43f5e;
     }
 
     .ad-comment-like-count {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 700;
       color: #94a3b8;
     }
 
-    /* Right Action Rail (TikTok / Reels Ad style: Likes counter) */
+    /* TikTok Right Action Rail */
     .right-action-rail {
       position: absolute;
-      right: 14px;
-      bottom: 30px;
+      right: 12px;
+      bottom: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      z-index: 25;
+      gap: 14px;
+      z-index: 28;
       pointer-events: auto;
+    }
+
+    /* Creator Profile Avatar with Follow Badge */
+    .avatar-action-wrap {
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .creator-avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .avatar-follow-plus {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: #f43f5e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(244, 63, 94, 0.6);
     }
 
     .action-btn-group {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .action-circle-btn {
-      width: 46px;
-      height: 46px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      background: rgba(14, 16, 22, 0.75);
+      background: rgba(14, 16, 22, 0.7);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
       transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
@@ -360,21 +419,47 @@
     .action-circle-btn.like-btn {
       background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
       border: none;
-      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.55);
+      box-shadow: 0 4px 18px rgba(225, 29, 72, 0.55);
     }
 
     .action-circle-btn svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       fill: #fff;
     }
 
     .action-metric-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: #ffffff;
-      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Sound Disc Spinning */
+    .sound-disc {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #18181b, #3f3f46, #18181b, #3f3f46, #18181b);
+      border: 2px solid #52525b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin-disc 4s linear infinite;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .sound-disc-center {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #f43f5e;
+      border: 2px solid #fff;
+    }
+
+    @keyframes spin-disc {
+      100% { transform: rotate(360deg); }
     }
 
     /* Floating Hearts Layer */
@@ -383,13 +468,13 @@
       inset: 0;
       pointer-events: none;
       overflow: hidden;
-      z-index: 18;
+      z-index: 20;
     }
 
     .floating-heart {
       position: absolute;
-      bottom: 70px;
-      right: 22px;
+      bottom: 75px;
+      right: 20px;
       pointer-events: none;
       will-change: transform, opacity;
       animation: float-upward var(--duration, 2.4s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
@@ -421,7 +506,7 @@
     .tap-burst {
       position: absolute;
       pointer-events: none;
-      z-index: 20;
+      z-index: 22;
       transform: translate(-50%, -50%);
     }
 
@@ -450,8 +535,8 @@
     }
 
     .tap-heart {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       animation: tap-heart-pop 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
       filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
     }
@@ -474,21 +559,21 @@
       }
     }
 
-    /* Bottom Ad Caption Bar */
+    /* Bottom Creator Caption Bar & Music Row */
     .bottom-ad-caption {
       position: absolute;
-      bottom: 22px;
+      bottom: 18px;
       left: 16px;
-      right: 70px;
-      z-index: 24;
+      right: 68px;
+      z-index: 28;
       pointer-events: none;
     }
 
     .ad-creator-row {
       display: flex;
       align-items: center;
-      gap: 7px;
-      margin-bottom: 5px;
+      gap: 6px;
+      margin-bottom: 4px;
     }
 
     .ad-creator-name {
@@ -504,7 +589,7 @@
     }
 
     .ad-caption-text {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: rgba(255, 255, 255, 0.9);
       line-height: 1.35;
       font-weight: 500;
@@ -512,11 +597,71 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      margin-bottom: 6px;
     }
 
+    .music-ticker-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .music-ticker-row svg {
+      width: 12px;
+      height: 12px;
+      fill: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    .music-marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* Vertical Navigation Arrows (Beside device on desktop) */
+    .feed-nav-arrows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-arrow-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #181a22;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-arrow-btn:hover {
+      background: #2563eb;
+      transform: scale(1.08);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nav-arrow-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.4;
+    }
+
+    /* Bottom Controls */
     .controls-panel {
-      margin-top: 22px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -540,149 +685,287 @@
       background: #272a34;
       color: #fff;
     }
+
+    .control-btn.active {
+      background: #2563eb;
+      border-color: #3b82f6;
+    }
   </style>
 </head>
 <body>
 
   <div class="header-info">
-    <h1>Ad Engagement Simulation</h1>
-    <p>Real-time views, likes, tapping & popping social proof comments</p>
+    <h1>TikTok Feed Auto-Swipe Experience</h1>
+    <p>4 promotional videos auto-swiping every 5 seconds with unique views, likes & dynamic comments</p>
   </div>
 
-  <div class="device-container" id="device">
-    <!-- Video Player -->
-    <video id="video" autoplay muted loop playsinline>
-      <source src="../src/assets/videos/vid-14.mp4" type="video/mp4" />
-    </video>
-
-    <div class="overlay-scrim"></div>
-
-    <!-- Top Bar: Surging Views Counter -->
-    <div class="top-stats-bar">
-      <div class="views-surge-pill">
-        <div class="views-icon-wrap">
-          <svg viewBox="0 0 24 24">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
-        </div>
-        <div class="views-info">
+  <div class="wrapper-with-nav">
+    <div class="device-container" id="device">
+      <!-- Top Bar: Dynamic Views Pill -->
+      <div class="top-stats-bar">
+        <div class="views-pill">
+          <div class="views-icon-wrap">
+            <svg viewBox="0 0 24 24">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
           <div class="views-number">
             <span id="viewCount">142.8K</span>
             <span class="views-badge-delta" id="viewDelta">+450</span>
           </div>
         </div>
+
+        <div class="campaign-tag">
+          <span class="campaign-dot"></span>
+          EasilyPromote
+        </div>
       </div>
 
-      <div class="campaign-tag">
-        <span class="campaign-dot"></span>
-        EasilyPromote
+      <!-- Vertical Slides Track -->
+      <div class="slides-track" id="slidesTrack">
+        <!-- Slide 0: vid-14 -->
+        <div class="slide" data-index="0">
+          <video id="vid0" loop playsinline muted preload="auto">
+            <source src="../src/assets/videos/vid-14.mp4" type="video/mp4" />
+          </video>
+          <div class="overlay-scrim"></div>
+        </div>
+
+        <!-- Slide 1: vid-1 -->
+        <div class="slide" data-index="1">
+          <video id="vid1" loop playsinline muted preload="auto">
+            <source src="../src/assets/videos/vid-1.mp4" type="video/mp4" />
+          </video>
+          <div class="overlay-scrim"></div>
+        </div>
+
+        <!-- Slide 2: vid-2 -->
+        <div class="slide" data-index="2">
+          <video id="vid2" loop playsinline muted preload="auto">
+            <source src="../src/assets/videos/vid-2.mp4" type="video/mp4" />
+          </video>
+          <div class="overlay-scrim"></div>
+        </div>
+
+        <!-- Slide 3: vid-3 -->
+        <div class="slide" data-index="3">
+          <video id="vid3" loop playsinline muted preload="auto">
+            <source src="../src/assets/videos/vid-3.mp4" type="video/mp4" />
+          </video>
+          <div class="overlay-scrim"></div>
+        </div>
       </div>
-    </div>
 
-    <!-- Dynamic Pop-Up Comments Stream (Like an ad) -->
-    <div class="comments-stream-container" id="commentsStream"></div>
+      <!-- Dynamic Pop-Up Ad Comments Stream -->
+      <div class="comments-stream-container" id="commentsStream"></div>
 
-    <!-- Floating Hearts Particle Stage -->
-    <div class="hearts-stage" id="heartsStage"></div>
+      <!-- Floating Hearts Particle Stage -->
+      <div class="hearts-stage" id="heartsStage"></div>
 
-    <!-- Right Side Action Rail (Likes + Comments Count) -->
-    <div class="right-action-rail">
-      <div class="action-btn-group">
-        <button class="action-circle-btn like-btn" id="likeBtn" aria-label="Like">
+      <!-- Right Action Rail (Avatar, Likes, Comments, Share, Sound) -->
+      <div class="right-action-rail">
+        <div class="avatar-action-wrap">
+          <div class="creator-avatar-circle" id="avatarCircle">R</div>
+          <div class="avatar-follow-plus">+</div>
+        </div>
+
+        <div class="action-btn-group">
+          <button class="action-circle-btn like-btn" id="likeBtn" aria-label="Like">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          <span class="action-metric-label" id="likeCount">34.2K</span>
+        </div>
+
+        <div class="action-btn-group">
+          <div class="action-circle-btn" aria-label="Comments">
+            <svg viewBox="0 0 24 24" fill="#fff">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <span class="action-metric-label" id="commentCount">1.4K</span>
+        </div>
+
+        <div class="action-btn-group">
+          <div class="action-circle-btn" aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="#fff">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <span class="action-metric-label" id="shareCount">8.9K</span>
+        </div>
+
+        <div class="sound-disc">
+          <div class="sound-disc-center"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Creator & Caption Info -->
+      <div class="bottom-ad-caption">
+        <div class="ad-creator-row">
+          <span class="ad-creator-name" id="creatorName">@.revishaan</span>
+          <svg class="ad-verified-check" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <p class="ad-caption-text" id="captionText">
+          every student in south africa needs this app... it's free ofc! 📲 Download now on iOS & Android #studentlife #productivity
+        </p>
+        <div class="music-ticker-row">
           <svg viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
           </svg>
-        </button>
-        <span class="action-metric-label" id="likeCount">34.2K</span>
-      </div>
-
-      <div class="action-btn-group">
-        <div class="action-circle-btn" aria-label="Comments">
-          <svg viewBox="0 0 24 24" fill="#fff">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
+          <div class="music-marquee" id="soundText">Original Sound - @.revishaan</div>
         </div>
-        <span class="action-metric-label" id="commentCount">1.2K</span>
-      </div>
-
-      <div class="action-btn-group">
-        <div class="action-circle-btn" aria-label="Share">
-          <svg viewBox="0 0 24 24" fill="#fff">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-            <polyline points="16 6 12 2 8 6"/>
-            <line x1="12" y1="2" x2="12" y2="15"/>
-          </svg>
-        </div>
-        <span class="action-metric-label">8.4K</span>
       </div>
     </div>
 
-    <!-- Bottom Ad Creator & Caption -->
-    <div class="bottom-ad-caption">
-      <div class="ad-creator-row">
-        <span class="ad-creator-name">@.revishaan</span>
-        <svg class="ad-verified-check" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+    <!-- Desktop Feed Nav Arrows (Up/Down) -->
+    <div class="feed-nav-arrows">
+      <button class="nav-arrow-btn" id="prevBtn" title="Previous Video (Swipe Down)">
+        <svg viewBox="0 0 24 24">
+          <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
-      </div>
-      <p class="ad-caption-text">
-        every student needs this app... it's free ofc! 📲 Download now on iOS & Android
-      </p>
+      </button>
+      <button class="nav-arrow-btn" id="nextBtn" title="Next Video (Swipe Up)">
+        <svg viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
     </div>
   </div>
 
+  <!-- Controls Panel -->
   <div class="controls-panel">
     <button class="control-btn" id="toggleSound">Unmute Video</button>
-    <button class="control-btn" id="triggerRushBtn">Simulate Rush (100 Likes + Views)</button>
+    <button class="control-btn active" id="toggleAutoSwipe">Auto-Swipe: ON (5s)</button>
+    <button class="control-btn" id="triggerRushBtn">Simulate Rush (50 Likes)</button>
   </div>
 
   <script>
-    const COLORS = [
-      '#f43f5e', // Rose
-      '#ec4899', // Pink
-      '#a855f7', // Purple
-      '#38bdf8', // Cyan
-      '#fbbf24', // Amber
-      '#ef4444', // Red
+    const VIDEOS_DATA = [
+      {
+        id: 0,
+        creator: '@.revishaan',
+        initial: 'R',
+        avatarBg: 'linear-gradient(135deg, #f43f5e, #fb7185)',
+        caption: "every student in south africa needs this app... it's free ofc! 📲 Download now on iOS & Android #studentlife #productivity",
+        sound: 'Original Sound - @.revishaan',
+        baseViews: 142800,
+        baseLikes: 34200,
+        commentsCount: '1.4K',
+        sharesCount: '8.9K',
+        comments: [
+          { user: 'ayanda_m', text: 'Wait this is actually 100% free??? 😭', likes: '342' },
+          { user: 'jordan.dev', text: 'Downloaded yesterday, literally saved my semester 🙌', likes: '519' },
+          { user: 'sipho_rsa', text: 'Every student in SA needs this on their phone fr 💯', likes: '1.1K' },
+          { user: 'chloe.studies', text: 'Where has this been all year?! Downloading rn 🔥', likes: '840' },
+        ]
+      },
+      {
+        id: 1,
+        creator: '@maya_creates',
+        initial: 'M',
+        avatarBg: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+        caption: "I tested 5 creator campaign platforms so you don't have to. EasilyPromote is on another level 🚀 #contentcreator #branddeals #creatorgrowth",
+        sound: 'Trending Beats - EasilyPromote Viral',
+        baseViews: 284500,
+        baseLikes: 68100,
+        commentsCount: '2.8K',
+        sharesCount: '14.2K',
+        comments: [
+          { user: 'tyler_vlogs', text: 'Got my first campaign approval in 24 hours 🤯', likes: '920' },
+          { user: 'sophia.ugc', text: 'The payout process is so fast compared to others 💸', likes: '1.4K' },
+          { user: 'ben_media', text: 'Been using this for my brand, views are insane 📈', likes: '488' },
+          { user: 'nina_style', text: 'Signing up right now thank you for sharing!! ✨', likes: '612' },
+        ]
+      },
+      {
+        id: 2,
+        creator: '@techwithsam',
+        initial: 'S',
+        avatarBg: 'linear-gradient(135deg, #0ea5e9, #38bdf8)',
+        caption: 'How modern brands are getting millions of views without traditional agency fees 👀 #marketingtips #growthhacks #startups',
+        sound: 'Tech Talk Daily - Original',
+        baseViews: 95400,
+        baseLikes: 21800,
+        commentsCount: '980',
+        sharesCount: '4.7K',
+        comments: [
+          { user: 'startup_sam', text: 'Agencies were charging us 10x for this lol 💀', likes: '745' },
+          { user: 'elena_growth', text: 'Our campaign reached 500k views in 3 days!', likes: '1.2K' },
+          { user: 'david_commerce', text: 'Can confirm, the ROI has been insane 💯', likes: '310' },
+          { user: 'hannah.market', text: 'Does it work for niche DTC products too? 🤔', likes: '185' },
+        ]
+      },
+      {
+        id: 3,
+        creator: '@brandcollabs_hq',
+        initial: 'B',
+        avatarBg: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+        caption: 'Creators get paid per verified view, brands only pay for real delivery. No more guessing games 🎯 #creatorfund #influencermarketing',
+        sound: 'EasilyPromote Anthem - LoFi',
+        baseViews: 518700,
+        baseLikes: 114200,
+        commentsCount: '5.6K',
+        sharesCount: '32.1K',
+        comments: [
+          { user: 'marcus_films', text: 'Finally a platform that pays based on actual verified views 👏', likes: '2.5K' },
+          { user: 'zara.creative', text: 'Made more here in two weeks than all of last month 🙌', likes: '3.1K' },
+          { user: 'kofi_digital', text: 'This is the future of influencer marketing fr 🚀', likes: '1.8K' },
+          { user: 'brand_ops', text: 'Game changer for our Q4 product launches ✨', likes: '940' },
+        ]
+      }
     ];
 
-    const AVATAR_COLORS = [
-      'linear-gradient(135deg, #f43f5e, #e11d48)',
-      'linear-gradient(135deg, #8b5cf6, #6d28d9)',
-      'linear-gradient(135deg, #06b6d4, #0891b2)',
-      'linear-gradient(135deg, #f59e0b, #d97706)',
-      'linear-gradient(135deg, #10b981, #059669)',
-    ];
-
-    const AD_COMMENTS = [
-      { user: 'ayanda_m', text: 'Wait this is actually 100% free??? 😭', likes: '342' },
-      { user: 'jordan.dev', text: 'Downloaded yesterday, literally saved my semester 🙌', likes: '519' },
-      { user: 'sipho_rsa', text: 'Every student in SA needs this on their phone fr 💯', likes: '1.1K' },
-      { user: 'chloe.studies', text: 'Where has this been all year?! Downloading rn 🔥', likes: '840' },
-      { user: 'thabo_k', text: 'Sent to all my varsity group chats immediately 📲', likes: '298' },
-      { user: 'kylie_za', text: 'Bro this made studying so much easier haha 👏', likes: '627' },
-      { user: 'nandi_b', text: 'The interface is actually so clean honestly ✨', likes: '412' },
-      { user: 'kevin.99', text: 'Already got 3 of my friends to download it too 🚀', likes: '730' },
-    ];
-
+    const COLORS = ['#f43f5e', '#ec4899', '#a855f7', '#38bdf8', '#fbbf24', '#ef4444'];
     const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 
-    const stage = document.getElementById('heartsStage');
+    let currentIndex = 0;
+    let autoSwipeEnabled = true;
+    let isMuted = true;
+    let slideTimer = null;
+    let progressStartTime = null;
+    const SLIDE_DURATION_MS = 5000;
+
+    // Elements
     const device = document.getElementById('device');
-    const likeBtn = document.getElementById('likeBtn');
+    const slidesTrack = document.getElementById('slidesTrack');
+    const stage = document.getElementById('heartsStage');
+    const commentsStream = document.getElementById('commentsStream');
     const viewCountEl = document.getElementById('viewCount');
     const viewDeltaEl = document.getElementById('viewDelta');
     const likeCountEl = document.getElementById('likeCount');
     const commentCountEl = document.getElementById('commentCount');
-    const commentsStream = document.getElementById('commentsStream');
-    const video = document.getElementById('video');
+    const shareCountEl = document.getElementById('shareCount');
+    const avatarCircle = document.getElementById('avatarCircle');
+    const creatorName = document.getElementById('creatorName');
+    const captionText = document.getElementById('captionText');
+    const soundText = document.getElementById('soundText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
     const toggleSound = document.getElementById('toggleSound');
+    const toggleAutoSwipe = document.getElementById('toggleAutoSwipe');
     const triggerRushBtn = document.getElementById('triggerRushBtn');
+    const likeBtn = document.getElementById('likeBtn');
 
-    let currentViews = 142800;
-    let currentLikes = 34200;
-    let commentIndex = 0;
+    const videos = [
+      document.getElementById('vid0'),
+      document.getElementById('vid1'),
+      document.getElementById('vid2'),
+      document.getElementById('vid3'),
+    ];
+
+    // Current active video metrics
+    let activeViews = VIDEOS_DATA[0].baseViews;
+    let activeLikes = VIDEOS_DATA[0].baseLikes;
+    let commentCursor = 0;
 
     function formatNumber(num) {
       if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -690,65 +973,81 @@
       return num.toLocaleString();
     }
 
-    // 1. Comments popping up dynamically (like an ad)
-    function spawnAdComment() {
-      const data = AD_COMMENTS[commentIndex % AD_COMMENTS.length];
-      commentIndex++;
+    // Update active video state & transition
+    function goToSlide(newIndex, direction = 'next') {
+      // Wrap around
+      if (newIndex >= VIDEOS_DATA.length) newIndex = 0;
+      if (newIndex < 0) newIndex = VIDEOS_DATA.length - 1;
 
-      const card = document.createElement('div');
-      card.className = 'ad-comment-card';
-
-      const avatarBg = AVATAR_COLORS[commentIndex % AVATAR_COLORS.length];
-      const initial = data.user.charAt(0).toUpperCase();
-
-      card.innerHTML = `
-        <div class="ad-comment-avatar" style="background: ${avatarBg}">${initial}</div>
-        <div class="ad-comment-body">
-          <div class="ad-comment-header">
-            <span class="ad-comment-user">@${data.user}</span>
-            <span class="ad-comment-badge">Verified</span>
-          </div>
-          <p class="ad-comment-text">${data.text}</p>
-        </div>
-        <div class="ad-comment-like">
-          <svg viewBox="0 0 24 24"><path d="${HEART_PATH}"/></svg>
-          <span class="ad-comment-like-count">${data.likes}</span>
-        </div>
-      `;
-
-      // Limit to 2 visible comment cards at a time
-      if (commentsStream.children.length >= 2) {
-        const oldest = commentsStream.children[0];
-        oldest.classList.add('fade-out');
-        setTimeout(() => oldest.remove(), 400);
+      // Pause previous video
+      const prevVideo = videos[currentIndex];
+      if (prevVideo) {
+        prevVideo.pause();
       }
 
-      commentsStream.appendChild(card);
+      currentIndex = newIndex;
+      const data = VIDEOS_DATA[currentIndex];
 
-      // Auto fade out after 4.5s
-      setTimeout(() => {
-        if (card.parentNode) {
-          card.classList.add('fade-out');
-          setTimeout(() => card.remove(), 400);
-        }
-      }, 4500);
+      // Vertical transform
+      slidesTrack.style.transform = `translateY(-${currentIndex * 100}%)`;
+
+      // Play new video
+      const currentVideo = videos[currentIndex];
+      if (currentVideo) {
+        currentVideo.currentTime = 0;
+        currentVideo.muted = isMuted;
+        currentVideo.play().catch(() => {});
+      }
+
+      // Update sidebar & creator info
+      creatorName.textContent = data.creator;
+      captionText.textContent = data.caption;
+      soundText.textContent = data.sound;
+      avatarCircle.textContent = data.initial;
+      avatarCircle.style.background = data.avatarBg;
+      commentCountEl.textContent = data.commentsCount;
+      shareCountEl.textContent = data.sharesCount;
+
+      // Reset & set metrics for this video
+      activeViews = data.baseViews;
+      activeLikes = data.baseLikes;
+      viewCountEl.textContent = formatNumber(activeViews);
+      likeCountEl.textContent = formatNumber(activeLikes);
+
+      // Clear old comments and spawn first for this video
+      commentsStream.innerHTML = '';
+      commentCursor = 0;
+      spawnAdComment();
+
+      progressStartTime = performance.now();
     }
 
-    // Spawn first comment immediately, then regularly every 2.8s
-    setTimeout(spawnAdComment, 600);
-    setInterval(spawnAdComment, 3200);
+    let animFrame;
+    function tickProgress(now) {
+      if (!progressStartTime) progressStartTime = now;
+      const elapsed = now - progressStartTime;
 
-    // 2. Floating Hearts Stream (Bottom-Right)
+      if (autoSwipeEnabled) {
+        if (elapsed >= SLIDE_DURATION_MS) {
+          goToSlide(currentIndex + 1, 'next');
+        }
+      }
+
+      animFrame = requestAnimationFrame(tickProgress);
+    }
+    animFrame = requestAnimationFrame(tickProgress);
+
+    // Floating Hearts
     function spawnFloatingHeart() {
       const heart = document.createElement('div');
       heart.className = 'floating-heart';
 
       const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-      const size = 20 + Math.floor(Math.random() * 20);
+      const size = 18 + Math.floor(Math.random() * 18);
       const sway = (Math.random() * 60 - 30) + 'px';
       const rotMid = (Math.random() * 30 - 15) + 'deg';
       const rotEnd = (Math.random() * 40 - 20) + 'deg';
-      const duration = (2.0 + Math.random() * 1.0).toFixed(2) + 's';
+      const duration = (2.0 + Math.random() * 0.8).toFixed(2) + 's';
 
       heart.style.setProperty('--sway', sway);
       heart.style.setProperty('--rot-mid', rotMid);
@@ -762,20 +1061,17 @@
       `;
 
       stage.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 3100);
+      setTimeout(() => heart.remove(), 2900);
     }
 
     setInterval(() => {
       spawnFloatingHeart();
-      if (Math.random() > 0.4) {
+      if (Math.random() > 0.45) {
         setTimeout(spawnFloatingHeart, 120);
       }
-    }, 320);
+    }, 340);
 
-    // 3. Screen Tapping Shockwaves & Burst Hearts
+    // Tap Burst Effect
     function spawnTapBurst(x, y) {
       const burst = document.createElement('div');
       burst.className = 'tap-burst';
@@ -788,7 +1084,7 @@
       burst.innerHTML = `
         <div class="tap-ring" style="border-color: ${color}"></div>
         <div class="tap-heart" style="--tap-rot: ${rot}">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="${color}" style="filter: drop-shadow(0 4px 12px ${color}99);">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="${color}" style="filter: drop-shadow(0 4px 12px ${color}99);">
             <path d="${HEART_PATH}"/>
           </svg>
         </div>
@@ -796,24 +1092,21 @@
 
       stage.appendChild(burst);
 
-      // Increment likes on tap
-      currentLikes += 1;
-      likeCountEl.textContent = formatNumber(currentLikes);
+      activeLikes += 1;
+      likeCountEl.textContent = formatNumber(activeLikes);
 
-      setTimeout(() => {
-        burst.remove();
-      }, 750);
+      setTimeout(() => burst.remove(), 750);
     }
 
-    // Automated Simulated Taps (Audience tapping on screen)
+    // Automated Taps
     setInterval(() => {
       const rect = device.getBoundingClientRect();
       const x = rect.width * (0.3 + Math.random() * 0.4);
       const y = rect.height * (0.35 + Math.random() * 0.35);
       spawnTapBurst(x, y);
-    }, 1100);
+    }, 1200);
 
-    // Interactive user tap
+    // Interactive Tap on Screen
     device.addEventListener('click', (e) => {
       const rect = device.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -831,25 +1124,138 @@
       }
     });
 
-    // 4. Views Surging Counter Animation
+    // Dynamic Ad Comments Spawner for current video
+    function spawnAdComment() {
+      const data = VIDEOS_DATA[currentIndex];
+      const comment = data.comments[commentCursor % data.comments.length];
+      commentCursor++;
+
+      const card = document.createElement('div');
+      card.className = 'ad-comment-card';
+
+      const initial = comment.user.charAt(0).toUpperCase();
+
+      card.innerHTML = `
+        <div class="ad-comment-avatar" style="background: ${data.avatarBg}">${initial}</div>
+        <div class="ad-comment-body">
+          <div class="ad-comment-header">
+            <span class="ad-comment-user">@${comment.user}</span>
+            <span class="ad-comment-badge">Verified</span>
+          </div>
+          <p class="ad-comment-text">${comment.text}</p>
+        </div>
+        <div class="ad-comment-like">
+          <svg viewBox="0 0 24 24"><path d="${HEART_PATH}"/></svg>
+          <span class="ad-comment-like-count">${comment.likes}</span>
+        </div>
+      `;
+
+      if (commentsStream.children.length >= 2) {
+        const oldest = commentsStream.children[0];
+        oldest.classList.add('fade-out');
+        setTimeout(() => oldest.remove(), 400);
+      }
+
+      commentsStream.appendChild(card);
+
+      setTimeout(() => {
+        if (card.parentNode) {
+          card.classList.add('fade-out');
+          setTimeout(() => card.remove(), 400);
+        }
+      }, 4200);
+    }
+
+    setInterval(spawnAdComment, 2600);
+
+    // Views increment loop
     setInterval(() => {
-      const delta = Math.floor(Math.random() * 120) + 40;
-      currentViews += delta;
-      viewCountEl.textContent = formatNumber(currentViews);
+      const delta = Math.floor(Math.random() * 110) + 35;
+      activeViews += delta;
+      viewCountEl.textContent = formatNumber(activeViews);
 
       viewDeltaEl.textContent = `+${delta}`;
       viewDeltaEl.classList.add('active');
-      setTimeout(() => {
-        viewDeltaEl.classList.remove('active');
-      }, 1000);
-    }, 2500);
+      setTimeout(() => viewDeltaEl.classList.remove('active'), 1000);
+    }, 2400);
+
+    // Mouse / Touch Swipe Gestures
+    let startY = 0;
+    let isDragging = false;
+
+    device.addEventListener('mousedown', (e) => {
+      startY = e.clientY;
+      isDragging = true;
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      const diffY = startY - e.clientY;
+      if (diffY > 40) {
+        goToSlide(currentIndex + 1, 'next'); // Swiped up
+      } else if (diffY < -40) {
+        goToSlide(currentIndex - 1, 'prev'); // Swiped down
+      }
+    });
+
+    // Touch support for mobile
+    device.addEventListener('touchstart', (e) => {
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    device.addEventListener('touchend', (e) => {
+      const diffY = startY - e.changedTouches[0].clientY;
+      if (diffY > 40) {
+        goToSlide(currentIndex + 1, 'next');
+      } else if (diffY < -40) {
+        goToSlide(currentIndex - 1, 'prev');
+      }
+    });
+
+    // Wheel Scroll (Up/Down)
+    let wheelDebounce = false;
+    device.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (wheelDebounce) return;
+      wheelDebounce = true;
+      if (e.deltaY > 20) {
+        goToSlide(currentIndex + 1, 'next');
+      } else if (e.deltaY < -20) {
+        goToSlide(currentIndex - 1, 'prev');
+      }
+      setTimeout(() => { wheelDebounce = false; }, 600);
+    }, { passive: false });
+
+    // Keyboard Arrow Keys
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        goToSlide(currentIndex + 1, 'next');
+      } else if (e.key === 'ArrowUp') {
+        goToSlide(currentIndex - 1, 'prev');
+      }
+    });
+
+    // Navigation Arrow Buttons
+    nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1, 'next'));
+    prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1, 'prev'));
 
     // Controls
     toggleSound.addEventListener('click', () => {
-      video.muted = !video.muted;
-      toggleSound.textContent = video.muted ? 'Unmute Video' : 'Mute Video';
-      if (!video.muted) {
-        video.play();
+      isMuted = !isMuted;
+      videos.forEach(v => { v.muted = isMuted; });
+      toggleSound.textContent = isMuted ? 'Unmute Video' : 'Mute Video';
+      if (!isMuted) {
+        videos[currentIndex].play().catch(() => {});
+      }
+    });
+
+    toggleAutoSwipe.addEventListener('click', () => {
+      autoSwipeEnabled = !autoSwipeEnabled;
+      toggleAutoSwipe.textContent = autoSwipeEnabled ? 'Auto-Swipe: ON (5s)' : 'Auto-Swipe: OFF';
+      toggleAutoSwipe.classList.toggle('active', autoSwipeEnabled);
+      if (autoSwipeEnabled) {
+        progressStartTime = performance.now();
       }
     });
 
@@ -861,17 +1267,20 @@
           const y = rect.height * (0.25 + Math.random() * 0.45);
           spawnTapBurst(x, y);
           spawnFloatingHeart();
-        }, i * 50);
+        }, i * 45);
       }
-      const bigDelta = 1450;
-      currentViews += bigDelta;
-      viewCountEl.textContent = formatNumber(currentViews);
-      viewDeltaEl.textContent = `+${bigDelta}`;
+      const delta = 1520;
+      activeViews += delta;
+      viewCountEl.textContent = formatNumber(activeViews);
+      viewDeltaEl.textContent = `+${delta}`;
       viewDeltaEl.classList.add('active');
       setTimeout(() => viewDeltaEl.classList.remove('active'), 1400);
 
       spawnAdComment();
     });
+
+    // Initial play on slide 0
+    goToSlide(0);
   </script>
 </body>
 </html>
