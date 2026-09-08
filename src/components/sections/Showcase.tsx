@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import ImageStreamHero from '../ui/image-stream-hero'
-import clip1 from '../../assets/videos/1.mp4'
-import clip2 from '../../assets/videos/2.mp4'
-import clip3 from '../../assets/videos/3.mp4'
-import clip4 from '../../assets/videos/4.mp4'
-import clip5 from '../../assets/videos/5.mp4'
-import clip6 from '../../assets/videos/6.mp4'
-import clip7 from '../../assets/videos/7.mp4'
-import clip8 from '../../assets/videos/8.mp4'
-import clip9 from '../../assets/videos/9.mp4'
-import clip10 from '../../assets/videos/10.mp4'
+import clip1 from '../../assets/videos/vid-1.mp4'
+import clip2 from '../../assets/videos/vid-2.mp4'
+import clip3 from '../../assets/videos/vid-3.mp4'
+import clip4 from '../../assets/videos/vid-4.mp4'
+import clip5 from '../../assets/videos/vid-5.mp4'
+import clip6 from '../../assets/videos/vid-6.mp4'
+import clip7 from '../../assets/videos/vid-7.mp4'
+import clip8 from '../../assets/videos/vid-8.mp4'
+import clip9 from '../../assets/videos/vid-9.mp4'
+import clip10 from '../../assets/videos/vid-10.mp4'
+import clip11 from '../../assets/videos/vid-11.mp4'
+import clip12 from '../../assets/videos/vid-12.mp4'
+import clip13 from '../../assets/videos/vid-13.mp4'
+import clip14 from '../../assets/videos/vid-14.mp4'
 
 const CLIPS = [
   { src: clip1 },
@@ -22,6 +26,10 @@ const CLIPS = [
   { src: clip8 },
   { src: clip9 },
   { src: clip10 },
+  { src: clip11 },
+  { src: clip12 },
+  { src: clip13 },
+  { src: clip14 },
 ]
 
 function Showcase() {

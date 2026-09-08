@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
-import clipCreate from '../../assets/videos/1.mp4'
-import clipClaim from '../../assets/videos/4.mp4'
-import clipApprove from '../../assets/videos/6.mp4'
-import clipPaid from '../../assets/videos/10.mp4'
+import clipCreate from '../../assets/videos/vid-6.mp4'
+import clipClaim from '../../assets/videos/vid-7.mp4'
+import clipApprove from '../../assets/videos/vid-8.mp4'
+import clipPaid from '../../assets/videos/vid-9.mp4'
 
 const REASONS = [
   {

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import AnimatedTabs from '../ui/animated-tabs'
-import clipBrief from '../../assets/videos/1.mp4'
-import clipGoal from '../../assets/videos/2.mp4'
-import clipScale from '../../assets/videos/4.mp4'
-import clipReach from '../../assets/videos/3.mp4'
-import clipResult from '../../assets/videos/10.mp4'
+import clipBrief from '../../assets/videos/vid-1.mp4'
+import clipGoal from '../../assets/videos/vid-2.mp4'
+import clipScale from '../../assets/videos/vid-3.mp4'
+import clipReach from '../../assets/videos/vid-4.mp4'
+import clipResult from '../../assets/videos/vid-5.mp4'
 
 const APP = 'https://app.easilypromote.com'
 
