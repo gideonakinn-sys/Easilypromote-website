@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ad Engagement Animation — Dynamic Views, Likes & Comments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #090a0d;
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .header-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header-info h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8a29e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-info p {
+      font-size: 0.875rem;
+      color: #78716c;
+    }
+
+    .device-container {
+      position: relative;
+      width: 380px;
+      max-width: 100%;
+      aspect-ratio: 9 / 16;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      background: #000;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* Cinematic Vignette */
+    .overlay-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.05) 25%,
+        rgba(0, 0, 0, 0.1) 60%,
+        rgba(0, 0, 0, 0.8) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Top Stats Bar: Views Surging Counter */
+    .top-stats-bar {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    .views-surge-pill {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(14, 16, 21, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 7px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .views-icon-wrap {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+    }
+
+    .views-icon-wrap svg {
+      width: 13px;
+      height: 13px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.2;
+    }
+
+    .views-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .views-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+    }
+
+    .views-number {
+      font-size: 0.95rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #f8fafc;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .views-badge-delta {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+      padding: 1px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      opacity: 0;
+      transform: translateY(3px);
+      transition: all 0.25s ease;
+    }
+
+    .views-badge-delta.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .campaign-tag {
+      background: rgba(14, 16, 21, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .campaign-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Floating Ad Comments Overlay (TikTok / Reels Ad style) */
+    .comments-stream-container {
+      position: absolute;
+      left: 16px;
+      bottom: 95px;
+      width: 78%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 22;
+      pointer-events: none;
+    }
+
+    .ad-comment-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      background: rgba(14, 16, 22, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      animation: ad-comment-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      will-change: transform, opacity;
+      max-width: 100%;
+    }
+
+    .ad-comment-card.fade-out {
+      animation: ad-comment-out 0.4s ease forwards;
+    }
+
+    @keyframes ad-comment-pop {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.92);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes ad-comment-out {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.95);
+      }
+    }
+
+    .ad-comment-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .ad-comment-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ad-comment-header {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 2px;
+    }
+
+    .ad-comment-user {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .ad-comment-badge {
+      font-size: 0.55rem;
+      background: rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .ad-comment-text {
+      font-size: 0.75rem;
+      color: #f1f5f9;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .ad-comment-like {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-left: 4px;
+      flex-shrink: 0;
+      color: #f43f5e;
+    }
+
+    .ad-comment-like svg {
+      width: 13px;
+      height: 13px;
+      fill: #f43f5e;
+    }
+
+    .ad-comment-like-count {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    /* Right Action Rail (TikTok / Reels Ad style: Likes counter) */
+    .right-action-rail {
+      position: absolute;
+      right: 14px;
+      bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      z-index: 25;
+      pointer-events: auto;
+    }
+
+    .action-btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-circle-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(14, 16, 22, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .action-circle-btn:active {
+      transform: scale(0.85);
+    }
+
+    .action-circle-btn.like-btn {
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+      border: none;
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.55);
+    }
+
+    .action-circle-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+    }
+
+    .action-metric-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Floating Hearts Layer */
+    .hearts-stage {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 18;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: 70px;
+      right: 22px;
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: float-upward var(--duration, 2.4s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes float-upward {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) scale(0.4) rotate(0deg);
+      }
+      10% {
+        opacity: 0.95;
+        transform: translate3d(calc(var(--sway) * 0.3), -40px, 0) scale(1.15) rotate(var(--rot-mid));
+      }
+      35% {
+        transform: translate3d(calc(var(--sway) * -0.7), -180px, 0) scale(1) rotate(calc(var(--rot-mid) * -0.8));
+      }
+      65% {
+        opacity: 0.85;
+        transform: translate3d(var(--sway), -340px, 0) scale(0.95) rotate(var(--rot-end));
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(calc(var(--sway) * -0.3), -500px, 0) scale(0.65) rotate(calc(var(--rot-end) * 1.5));
+      }
+    }
+
+    /* Screen Tap Ripple & Pop Heart */
+    .tap-burst {
+      position: absolute;
+      pointer-events: none;
+      z-index: 20;
+      transform: translate(-50%, -50%);
+    }
+
+    .tap-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(244, 63, 94, 0.85);
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 1;
+      animation: ring-expand 0.48s ease-out forwards;
+    }
+
+    @keyframes ring-expand {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(3.2);
+        opacity: 0;
+      }
+    }
+
+    .tap-heart {
+      width: 50px;
+      height: 50px;
+      animation: tap-heart-pop 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+    }
+
+    @keyframes tap-heart-pop {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(var(--tap-rot, -12deg));
+      }
+      25% {
+        opacity: 1;
+        transform: scale(1.35) rotate(var(--tap-rot, -12deg));
+      }
+      45% {
+        transform: scale(1) translateY(0) rotate(var(--tap-rot, -12deg));
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.15) translateY(-60px) rotate(calc(var(--tap-rot, -12deg) * 1.6));
+      }
+    }
+
+    /* Bottom Ad Caption Bar */
+    .bottom-ad-caption {
+      position: absolute;
+      bottom: 22px;
+      left: 16px;
+      right: 70px;
+      z-index: 24;
+      pointer-events: none;
+    }
+
+    .ad-creator-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+
+    .ad-creator-name {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .ad-verified-check {
+      width: 13px;
+      height: 13px;
+      fill: #20d5ec;
+    }
+
+    .ad-caption-text {
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.35;
+      font-weight: 500;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    .controls-panel {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .control-btn {
+      background: #181a20;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      background: #272a34;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-info">
+    <h1>Ad Engagement Simulation</h1>
+    <p>Real-time views, likes, tapping & popping social proof comments</p>
+  </div>
+
+  <div class="device-container" id="device">
+    <!-- Video Player -->
+    <video id="video" autoplay muted loop playsinline>
+      <source src="../src/assets/videos/vid-14.mp4" type="video/mp4" />
+    </video>
+
+    <div class="overlay-scrim"></div>
+
+    <!-- Top Bar: Surging Views Counter -->
+    <div class="top-stats-bar">
+      <div class="views-surge-pill">
+        <div class="views-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="views-info">
+          <div class="views-number">
+            <span id="viewCount">142.8K</span>
+            <span class="views-badge-delta" id="viewDelta">+450</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="campaign-tag">
+        <span class="campaign-dot"></span>
+        EasilyPromote
+      </div>
+    </div>
+
+    <!-- Dynamic Pop-Up Comments Stream (Like an ad) -->
+    <div class="comments-stream-container" id="commentsStream"></div>
+
+    <!-- Floating Hearts Particle Stage -->
+    <div class="hearts-stage" id="heartsStage"></div>
+
+    <!-- Right Side Action Rail (Likes + Comments Count) -->
+    <div class="right-action-rail">
+      <div class="action-btn-group">
+        <button class="action-circle-btn like-btn" id="likeBtn" aria-label="Like">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
+        <span class="action-metric-label" id="likeCount">34.2K</span>
+      </div>
+
+      <div class="action-btn-group">
+        <div class="action-circle-btn" aria-label="Comments">
+          <svg viewBox="0 0 24 24" fill="#fff">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <span class="action-metric-label" id="commentCount">1.2K</span>
+      </div>
+
+      <div class="action-btn-group">
+        <div class="action-circle-btn" aria-label="Share">
+          <svg viewBox="0 0 24 24" fill="#fff">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <span class="action-metric-label">8.4K</span>
+      </div>
+    </div>
+
+    <!-- Bottom Ad Creator & Caption -->
+    <div class="bottom-ad-caption">
+      <div class="ad-creator-row">
+        <span class="ad-creator-name">@.revishaan</span>
+        <svg class="ad-verified-check" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <p class="ad-caption-text">
+        every student needs this app... it's free ofc! 📲 Download now on iOS & Android
+      </p>
+    </div>
+  </div>
+
+  <div class="controls-panel">
+    <button class="control-btn" id="toggleSound">Unmute Video</button>
+    <button class="control-btn" id="triggerRushBtn">Simulate Rush (100 Likes + Views)</button>
+  </div>
+
+  <script>
+    const COLORS = [
+      '#f43f5e', // Rose
+      '#ec4899', // Pink
+      '#a855f7', // Purple
+      '#38bdf8', // Cyan
+      '#fbbf24', // Amber
+      '#ef4444', // Red
+    ];
+
+    const AVATAR_COLORS = [
+      'linear-gradient(135deg, #f43f5e, #e11d48)',
+      'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+      'linear-gradient(135deg, #06b6d4, #0891b2)',
+      'linear-gradient(135deg, #f59e0b, #d97706)',
+      'linear-gradient(135deg, #10b981, #059669)',
+    ];
+
+    const AD_COMMENTS = [
+      { user: 'ayanda_m', text: 'Wait this is actually 100% free??? 😭', likes: '342' },
+      { user: 'jordan.dev', text: 'Downloaded yesterday, literally saved my semester 🙌', likes: '519' },
+      { user: 'sipho_rsa', text: 'Every student in SA needs this on their phone fr 💯', likes: '1.1K' },
+      { user: 'chloe.studies', text: 'Where has this been all year?! Downloading rn 🔥', likes: '840' },
+      { user: 'thabo_k', text: 'Sent to all my varsity group chats immediately 📲', likes: '298' },
+      { user: 'kylie_za', text: 'Bro this made studying so much easier haha 👏', likes: '627' },
+      { user: 'nandi_b', text: 'The interface is actually so clean honestly ✨', likes: '412' },
+      { user: 'kevin.99', text: 'Already got 3 of my friends to download it too 🚀', likes: '730' },
+    ];
+
+    const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+
+    const stage = document.getElementById('heartsStage');
+    const device = document.getElementById('device');
+    const likeBtn = document.getElementById('likeBtn');
+    const viewCountEl = document.getElementById('viewCount');
+    const viewDeltaEl = document.getElementById('viewDelta');
+    const likeCountEl = document.getElementById('likeCount');
+    const commentCountEl = document.getElementById('commentCount');
+    const commentsStream = document.getElementById('commentsStream');
+    const video = document.getElementById('video');
+    const toggleSound = document.getElementById('toggleSound');
+    const triggerRushBtn = document.getElementById('triggerRushBtn');
+
+    let currentViews = 142800;
+    let currentLikes = 34200;
+    let commentIndex = 0;
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toLocaleString();
+    }
+
+    // 1. Comments popping up dynamically (like an ad)
+    function spawnAdComment() {
+      const data = AD_COMMENTS[commentIndex % AD_COMMENTS.length];
+      commentIndex++;
+
+      const card = document.createElement('div');
+      card.className = 'ad-comment-card';
+
+      const avatarBg = AVATAR_COLORS[commentIndex % AVATAR_COLORS.length];
+      const initial = data.user.charAt(0).toUpperCase();
+
+      card.innerHTML = `
+        <div class="ad-comment-avatar" style="background: ${avatarBg}">${initial}</div>
+        <div class="ad-comment-body">
+          <div class="ad-comment-header">
+            <span class="ad-comment-user">@${data.user}</span>
+            <span class="ad-comment-badge">Verified</span>
+          </div>
+          <p class="ad-comment-text">${data.text}</p>
+        </div>
+        <div class="ad-comment-like">
+          <svg viewBox="0 0 24 24"><path d="${HEART_PATH}"/></svg>
+          <span class="ad-comment-like-count">${data.likes}</span>
+        </div>
+      `;
+
+      // Limit to 2 visible comment cards at a time
+      if (commentsStream.children.length >= 2) {
+        const oldest = commentsStream.children[0];
+        oldest.classList.add('fade-out');
+        setTimeout(() => oldest.remove(), 400);
+      }
+
+      commentsStream.appendChild(card);
+
+      // Auto fade out after 4.5s
+      setTimeout(() => {
+        if (card.parentNode) {
+          card.classList.add('fade-out');
+          setTimeout(() => card.remove(), 400);
+        }
+      }, 4500);
+    }
+
+    // Spawn first comment immediately, then regularly every 2.8s
+    setTimeout(spawnAdComment, 600);
+    setInterval(spawnAdComment, 3200);
+
+    // 2. Floating Hearts Stream (Bottom-Right)
+    function spawnFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const size = 20 + Math.floor(Math.random() * 20);
+      const sway = (Math.random() * 60 - 30) + 'px';
+      const rotMid = (Math.random() * 30 - 15) + 'deg';
+      const rotEnd = (Math.random() * 40 - 20) + 'deg';
+      const duration = (2.0 + Math.random() * 1.0).toFixed(2) + 's';
+
+      heart.style.setProperty('--sway', sway);
+      heart.style.setProperty('--rot-mid', rotMid);
+      heart.style.setProperty('--rot-end', rotEnd);
+      heart.style.setProperty('--duration', duration);
+
+      heart.innerHTML = `
+        <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}" style="filter: drop-shadow(0 2px 6px ${color}88);">
+          <path d="${HEART_PATH}"/>
+        </svg>
+      `;
+
+      stage.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3100);
+    }
+
+    setInterval(() => {
+      spawnFloatingHeart();
+      if (Math.random() > 0.4) {
+        setTimeout(spawnFloatingHeart, 120);
+      }
+    }, 320);
+
+    // 3. Screen Tapping Shockwaves & Burst Hearts
+    function spawnTapBurst(x, y) {
+      const burst = document.createElement('div');
+      burst.className = 'tap-burst';
+      burst.style.left = x + 'px';
+      burst.style.top = y + 'px';
+
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const rot = (Math.random() * 30 - 15) + 'deg';
+
+      burst.innerHTML = `
+        <div class="tap-ring" style="border-color: ${color}"></div>
+        <div class="tap-heart" style="--tap-rot: ${rot}">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="${color}" style="filter: drop-shadow(0 4px 12px ${color}99);">
+            <path d="${HEART_PATH}"/>
+          </svg>
+        </div>
+      `;
+
+      stage.appendChild(burst);
+
+      // Increment likes on tap
+      currentLikes += 1;
+      likeCountEl.textContent = formatNumber(currentLikes);
+
+      setTimeout(() => {
+        burst.remove();
+      }, 750);
+    }
+
+    // Automated Simulated Taps (Audience tapping on screen)
+    setInterval(() => {
+      const rect = device.getBoundingClientRect();
+      const x = rect.width * (0.3 + Math.random() * 0.4);
+      const y = rect.height * (0.35 + Math.random() * 0.35);
+      spawnTapBurst(x, y);
+    }, 1100);
+
+    // Interactive user tap
+    device.addEventListener('click', (e) => {
+      const rect = device.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      spawnTapBurst(x, y);
+      spawnFloatingHeart();
+    });
+
+    likeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rect = device.getBoundingClientRect();
+      spawnTapBurst(rect.width - 38, rect.height - 70);
+      for (let i = 0; i < 4; i++) {
+        setTimeout(spawnFloatingHeart, i * 60);
+      }
+    });
+
+    // 4. Views Surging Counter Animation
+    setInterval(() => {
+      const delta = Math.floor(Math.random() * 120) + 40;
+      currentViews += delta;
+      viewCountEl.textContent = formatNumber(currentViews);
+
+      viewDeltaEl.textContent = `+${delta}`;
+      viewDeltaEl.classList.add('active');
+      setTimeout(() => {
+        viewDeltaEl.classList.remove('active');
+      }, 1000);
+    }, 2500);
+
+    // Controls
+    toggleSound.addEventListener('click', () => {
+      video.muted = !video.muted;
+      toggleSound.textContent = video.muted ? 'Unmute Video' : 'Mute Video';
+      if (!video.muted) {
+        video.play();
+      }
+    });
+
+    triggerRushBtn.addEventListener('click', () => {
+      const rect = device.getBoundingClientRect();
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+          const x = rect.width * (0.2 + Math.random() * 0.6);
+          const y = rect.height * (0.25 + Math.random() * 0.45);
+          spawnTapBurst(x, y);
+          spawnFloatingHeart();
+        }, i * 50);
+      }
+      const bigDelta = 1450;
+      currentViews += bigDelta;
+      viewCountEl.textContent = formatNumber(currentViews);
+      viewDeltaEl.textContent = `+${bigDelta}`;
+      viewDeltaEl.classList.add('active');
+      setTimeout(() => viewDeltaEl.classList.remove('active'), 1400);
+
+      spawnAdComment();
+    });
+  </script>
+</body>
+</html>
