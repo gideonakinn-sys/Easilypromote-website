@@ -10,9 +10,21 @@ import {
   RESPONSES,
   SAMPLE_REQUEST,
   TEST_VECTOR,
+  VALIDATE_REASONS,
+  VALIDATE_REQUEST,
+  VALIDATE_RESPONSES,
+  VALIDATE_SAMPLES,
+  VALIDATE_URL,
   WEBHOOK_URL,
   type CodeLanguage,
 } from '../data/referralWebhooks'
+
+type Operation = 'validate' | 'conversion'
+
+const OPERATION_LABELS: Record<Operation, string> = {
+  validate: 'Check a code',
+  conversion: 'Report a conversion',
+}
 
 // The theme's --font-mono is Rethink Sans for the stamps; code needs a real monospace.
 const MONO = 'font-[ui-monospace,SFMono-Regular,Menlo,Consolas,monospace]'
@@ -21,8 +33,9 @@ const TOC = [
   { id: 'how-it-works', label: 'How it works' },
   { id: 'quickstart', label: 'Quickstart' },
   { id: 'signing', label: 'Signing requests' },
-  { id: 'request', label: 'Request' },
-  { id: 'responses', label: 'Responses' },
+  { id: 'validate', label: 'Checking a code' },
+  { id: 'request', label: 'Reporting a conversion' },
+  { id: 'responses', label: 'Conversion responses' },
   { id: 'retries', label: 'Retries and duplicates' },
   { id: 'examples', label: 'Code examples' },
   { id: 'testing', label: 'Testing' },
@@ -86,6 +99,7 @@ function Prose({ children }: { children: React.ReactNode }) {
 
 function Developers() {
   const [language, setLanguage] = useState<CodeLanguage>('node')
+  const [operation, setOperation] = useState<Operation>('validate')
 
   return (
     <div className="flex flex-1 flex-col px-5 pb-20 pt-28 md:px-10 md:pb-28 md:pt-36">
@@ -219,9 +233,71 @@ function Developers() {
               </div>
             </Section>
 
-            <Section id="request" title="Request">
+            <Section id="validate" title="Checking a code">
               <Prose>
-                Copy your exact webhook URL from Referral tracking settings in the app. In production it is{' '}
+                When a user enters a referral code in your sign-up, checkout or deposit flow, ask us whether it’s valid
+                before you accept it. You never load or sync creators’ codes — a code works the moment its creator joins
+                a campaign. The endpoint is <InlineCode>{VALIDATE_URL}</InlineCode>.
+              </Prose>
+              <CodeBlock code={VALIDATE_REQUEST} label="HTTP" />
+              <Prose>
+                Sign it exactly like a conversion. A code check records nothing; report the conversion separately once it
+                happens.
+              </Prose>
+
+              <div className="overflow-x-auto rounded-2xl border border-rule">
+                <table className="w-full min-w-[640px] border-collapse text-left">
+                  <caption className="sr-only">Code check responses</caption>
+                  <thead className="bg-raised">
+                    <tr>
+                      {['Status', 'Body', 'What to do'].map((heading) => (
+                        <th key={heading} scope="col" className="stamp border-b border-rule px-4 py-3 font-normal text-ink-3">
+                          {heading}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {VALIDATE_RESPONSES.map((row) => (
+                      <tr key={row.body} className="align-top">
+                        <td className="border-b border-rule px-4 py-3">
+                          <code className={`${MONO} text-[0.8125rem] font-semibold text-ink`}>{row.status}</code>
+                        </td>
+                        <td className="border-b border-rule px-4 py-3">
+                          <code className={`${MONO} break-all text-[0.75rem] text-ink-2`}>{row.body}</code>
+                        </td>
+                        <td className="border-b border-rule px-4 py-3 text-[0.8125rem] leading-[1.6] text-ink-2">
+                          {row.action}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <dl className="divide-y divide-rule rounded-2xl border border-rule bg-raised">
+                {VALIDATE_REASONS.map((item) => (
+                  <div key={item.reason} className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:gap-6">
+                    <dt className="sm:w-56 sm:shrink-0">
+                      <code className={`${MONO} text-[0.8125rem] font-semibold text-ink`}>{item.reason}</code>
+                    </dt>
+                    <dd className="text-[0.875rem] leading-[1.6] text-ink-2">{item.meaning}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="rounded-2xl border border-dashed border-amber bg-amber-soft p-4">
+                <p className="text-[0.875rem] leading-[1.6] text-ink">
+                  <span className="font-semibold">Don’t block sign-ups on this call.</span> Use a short timeout, around 3
+                  seconds. If the check errors or times out, accept the code anyway and report the conversion as normal —
+                  the conversion webhook rejects codes that were never valid.
+                </p>
+              </div>
+            </Section>
+
+            <Section id="request" title="Reporting a conversion">
+              <Prose>
+                Copy your exact URLs from Referral tracking settings in the app. In production the conversion endpoint is{' '}
                 <InlineCode>{WEBHOOK_URL}</InlineCode>.
               </Prose>
               <CodeBlock code={SAMPLE_REQUEST} label="HTTP" />
@@ -259,7 +335,7 @@ function Developers() {
               </div>
             </Section>
 
-            <Section id="responses" title="Responses">
+            <Section id="responses" title="Conversion responses">
               <Prose>
                 Every response is JSON. A <InlineCode>200</InlineCode> means we have the event — including duplicates —
                 so you can stop sending it.
@@ -321,6 +397,22 @@ function Developers() {
             </Section>
 
             <Section id="examples" title="Code examples">
+              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Operation">
+                {(Object.keys(OPERATION_LABELS) as Operation[]).map((op) => (
+                  <button
+                    key={op}
+                    type="button"
+                    role="radio"
+                    aria-checked={operation === op}
+                    onClick={() => setOperation(op)}
+                    className={`rounded-full px-4 py-2 text-[0.8125rem] font-semibold ${
+                      operation === op ? 'bg-brand text-ink' : 'border border-rule bg-raised text-ink-2'
+                    }`}
+                  >
+                    {OPERATION_LABELS[op]}
+                  </button>
+                ))}
+              </div>
               <div className="flex flex-wrap gap-2" role="tablist" aria-label="Example language">
                 {(Object.keys(CODE_LABELS) as CodeLanguage[]).map((lang) => (
                   <button
@@ -340,11 +432,15 @@ function Developers() {
                 ))}
               </div>
               <div id="code-example-panel" role="tabpanel" aria-labelledby={`tab-${language}`}>
-                <CodeBlock code={CODE_SAMPLES[language]} label={CODE_LABELS[language]} />
+                <CodeBlock
+                  code={operation === 'validate' ? VALIDATE_SAMPLES[language] : CODE_SAMPLES[language]}
+                  label={`${CODE_LABELS[language]} · ${OPERATION_LABELS[operation]}`}
+                />
               </div>
               <Prose>
                 Store <InlineCode>EP_KEY_ID</InlineCode> and <InlineCode>EP_WEBHOOK_SECRET</InlineCode> as environment
-                variables on your server. The cURL example sends a test event, so you can run it as-is.
+                variables on your server. Both cURL examples are safe to run as-is: a code check records nothing, and the
+                conversion example sends a test event.
               </Prose>
             </Section>
 
@@ -352,8 +448,8 @@ function Developers() {
               <ul className="space-y-3">
                 {[
                   {
-                    title: 'Send a test event from the app',
-                    body: 'Referral tracking settings has a Send test event button. We sign a request with your key and run it through the real checks, so you can see a working exchange before writing any code. Add a creator’s code to check it’s set up on a campaign.',
+                    title: 'Try requests from the app',
+                    body: 'Referral tracking settings can check a code or send a test conversion for you. We sign the request with your key and run it through the real checks, so you can see a working exchange before writing any code.',
                   },
                   {
                     title: 'Send test events from your server',

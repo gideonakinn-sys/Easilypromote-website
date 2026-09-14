@@ -7,6 +7,7 @@
  */
 
 export const WEBHOOK_URL = 'https://api.easilypromote.com/api/webhooks/conversions'
+export const VALIDATE_URL = 'https://api.easilypromote.com/api/webhooks/codes/validate'
 export const APP_SETTINGS_URL = 'https://app.easilypromote.com/dashboard/brand/settings/referral'
 
 export const FLOW_STEPS = [
@@ -16,14 +17,14 @@ export const FLOW_STEPS = [
     body: 'Each creator gets one code, like ACME-TUNDE. You can also supply codes from your own referral system instead.',
   },
   {
-    who: 'Your team',
-    title: 'You add the code to your app',
-    body: 'Load the codes into your referral or promo system, by CSV or one at a time, so your app accepts them at sign-up.',
-  },
-  {
     who: 'Creator',
     title: 'The creator shares the code with their audience',
     body: 'Viewers see the content and enter the code when they sign up, install, deposit or buy. They never interact with Easily Promote.',
+  },
+  {
+    who: 'Your server',
+    title: 'Your app checks the code with us',
+    body: 'When a user enters a code, your server asks us whether it’s valid and accepts or rejects it. There is nothing to load or sync — a new creator’s code works the moment they join.',
   },
   {
     who: 'Your server',
@@ -40,9 +41,9 @@ export const FLOW_STEPS = [
 export const QUICKSTART = [
   'In the Easily Promote app, open Referral tracking settings and generate a signing key.',
   'Store the key ID and secret on your server as EP_KEY_ID and EP_WEBHOOK_SECRET. Never ship them in an app or website.',
-  'Send a test event (add "test": true) and confirm you show as Connected. Nothing is counted.',
-  'Turn on referral tracking for a campaign and load the creators’ codes into your app.',
-  'Send a real event every time someone converts with one of those codes.',
+  'Add a referral code field to your sign-up (or checkout) and check each code with the validation endpoint before accepting it.',
+  'Send a conversion every time someone who used a valid code converts. Use "test": true while you build — nothing is counted.',
+  'Turn on referral tracking for a campaign. Creators’ codes start working as soon as they join.',
 ]
 
 export type FieldRow = {
@@ -91,6 +92,42 @@ export const FIELDS: FieldRow[] = [
     description:
       'Set true to verify your key and signature without recording anything. The code does not need to exist; the response tells you whether it would match.',
     example: 'true',
+  },
+]
+
+export const VALIDATE_REQUEST = [
+  `POST ${VALIDATE_URL}`,
+  'Content-Type: application/json',
+  'X-EP-Key-Id: key_4f9a2c81d0e3',
+  'X-EP-Signature: t=1789408800,v1=…',
+  '',
+  '{ "code": "ACME-TUNDE" }',
+].join('\n')
+
+export const VALIDATE_RESPONSES = [
+  {
+    status: '200',
+    body: '{"valid":true,"code":"ACME-TUNDE","campaign_id":"6aa8…","event":"signup"}',
+    action: 'Accept the code and store it on the new user so you can report their conversion later.',
+  },
+  {
+    status: '200',
+    body: '{"valid":false,"code":"ACME-TUNDE","reason":"not_found"}',
+    action: 'Tell the user the code isn’t recognised. The reasons are listed below.',
+  },
+  {
+    status: '400 · 401 · 429 · 5xx',
+    body: '{"error":"…"}',
+    action: 'Same meaning as for conversions. Don’t block the user — accept the code and let the conversion decide.',
+  },
+]
+
+export const VALIDATE_REASONS = [
+  { reason: 'not_found', meaning: 'No creator in your account has this code.' },
+  { reason: 'disabled', meaning: 'You turned this code off.' },
+  {
+    reason: 'campaign_not_accepting',
+    meaning: 'The code’s campaign was cancelled or ended more than 7 days ago.',
   },
 ]
 
@@ -294,6 +331,103 @@ export const CODE_SAMPLES: Record<CodeLanguage, string> = {
   ].join('\n'),
 }
 
+export const VALIDATE_SAMPLES: Record<CodeLanguage, string> = {
+  node: [
+    'const crypto = require("crypto");',
+    '',
+    '// Call from your sign-up handler before accepting a referral code.',
+    'async function checkReferralCode(code) {',
+    '  const body = JSON.stringify({ code });',
+    '  const t = Math.floor(Date.now() / 1000);',
+    '  const v1 = crypto',
+    '    .createHmac("sha256", process.env.EP_WEBHOOK_SECRET)',
+    '    .update(`${t}.${body}`)',
+    '    .digest("hex");',
+    '',
+    `  const res = await fetch("${VALIDATE_URL}", {`,
+    '    method: "POST",',
+    '    headers: {',
+    '      "Content-Type": "application/json",',
+    '      "X-EP-Key-Id": process.env.EP_KEY_ID,',
+    '      "X-EP-Signature": `t=${t},v1=${v1}`,',
+    '    },',
+    '    body,',
+    '    signal: AbortSignal.timeout(3000),',
+    '  });',
+    '  if (!res.ok) throw new Error(`Code check failed: ${res.status}`);',
+    '  const result = await res.json(); // { valid, code, reason? }',
+    '  return result.valid;',
+    '}',
+  ].join('\n'),
+  python: [
+    'import hashlib, hmac, json, os, time',
+    'import requests',
+    '',
+    '# Call from your sign-up handler before accepting a referral code.',
+    'def check_referral_code(code):',
+    '    body = json.dumps({"code": code}, separators=(",", ":"))',
+    '    t = str(int(time.time()))',
+    '    v1 = hmac.new(',
+    '        os.environ["EP_WEBHOOK_SECRET"].encode(),',
+    '        f"{t}.{body}".encode(),',
+    '        hashlib.sha256,',
+    '    ).hexdigest()',
+    '',
+    '    res = requests.post(',
+    `        "${VALIDATE_URL}",`,
+    '        data=body,',
+    '        headers={',
+    '            "Content-Type": "application/json",',
+    '            "X-EP-Key-Id": os.environ["EP_KEY_ID"],',
+    '            "X-EP-Signature": f"t={t},v1={v1}",',
+    '        },',
+    '        timeout=3,',
+    '    )',
+    '    res.raise_for_status()',
+    '    return res.json()["valid"]',
+  ].join('\n'),
+  php: [
+    '<?php',
+    '// Call from your sign-up handler before accepting a referral code.',
+    'function check_referral_code(string $code): bool {',
+    "    $body = json_encode(['code' => $code]);",
+    '    $t = time();',
+    "    $v1 = hash_hmac('sha256', $t . '.' . $body, getenv('EP_WEBHOOK_SECRET'));",
+    '',
+    `    $ch = curl_init('${VALIDATE_URL}');`,
+    '    curl_setopt_array($ch, [',
+    '        CURLOPT_POST => true,',
+    '        CURLOPT_POSTFIELDS => $body,',
+    '        CURLOPT_RETURNTRANSFER => true,',
+    '        CURLOPT_TIMEOUT => 3,',
+    '        CURLOPT_HTTPHEADER => [',
+    "            'Content-Type: application/json',",
+    "            'X-EP-Key-Id: ' . getenv('EP_KEY_ID'),",
+    '            "X-EP-Signature: t={$t},v1={$v1}",',
+    '        ],',
+    '    ]);',
+    '    $response = curl_exec($ch);',
+    '    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);',
+    '    curl_close($ch);',
+    '    if ($status !== 200) {',
+    '        throw new RuntimeException("Code check failed: $status");',
+    '    }',
+    "    return json_decode($response, true)['valid'] === true;",
+    '}',
+  ].join('\n'),
+  curl: [
+    `BODY='{"code":"ACME-TUNDE"}'`,
+    'T=$(date +%s)',
+    `SIG=$(printf '%s' "$T.$BODY" | openssl dgst -sha256 -hmac "$EP_WEBHOOK_SECRET" | sed 's/^.* //')`,
+    '',
+    `curl -X POST ${VALIDATE_URL} \\`,
+    '  -H "Content-Type: application/json" \\',
+    '  -H "X-EP-Key-Id: $EP_KEY_ID" \\',
+    '  -H "X-EP-Signature: t=$T,v1=$SIG" \\',
+    '  -d "$BODY"',
+  ].join('\n'),
+}
+
 export const SAMPLE_REQUEST = [
   `POST ${WEBHOOK_URL}`,
   'Content-Type: application/json',
@@ -309,6 +443,14 @@ export const SAMPLE_REQUEST = [
 ].join('\n')
 
 export const FAQ = [
+  {
+    q: 'Do we need to load creators’ codes into our system?',
+    a: 'No. Check each code with the validation endpoint when a user enters it. A new creator’s code works as soon as they join. If your system can only accept codes it already stores, download them as a CSV from the campaign’s Referrals tab instead.',
+  },
+  {
+    q: 'What if the code check fails or times out?',
+    a: 'Don’t block the user. Accept the code, store it, and report the conversion as normal — the conversion webhook answers 404 if the code was never valid, so nothing is credited by mistake.',
+  },
   {
     q: 'Do creators need an account on our platform?',
     a: 'No. Codes move between you and Easily Promote only. Creators just share the code; your users enter it the way they normally would.',
