@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import Developers from './pages/Developers'
 import NotFound from './pages/NotFound'
 import { metaFor } from './routeMeta'
 
@@ -63,6 +64,7 @@ export function AppShell() {
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/developers" element={<Developers />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -57,6 +57,11 @@ function Footer() {
                     Sign in
                   </a>
                 </li>
+                <li>
+                  <Link to="/developers" className="nudge inline-block text-[0.875rem] text-ink-2">
+                    Developer docs
+                  </Link>
+                </li>
               </ul>
             </div>
 

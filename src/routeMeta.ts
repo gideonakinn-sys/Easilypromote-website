@@ -39,6 +39,12 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'What EasilyPromote collects, how connected platform accounts are used to verify views, who data is shared with, and how to delete an account.',
     file: 'privacy.html',
   },
+  '/developers': {
+    title: 'Referral webhooks for developers — EasilyPromote',
+    description:
+      'How to report conversions from creator referral codes to EasilyPromote: request signing, body fields, responses, retries, code examples and testing.',
+    file: 'developers.html',
+  },
   '/404': {
     title: 'Page not found — EasilyPromote',
     description: 'That page does not exist on easilypromote.com.',
