@@ -60,6 +60,18 @@ function Navbar() {
                 Legal
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/developers"
+                data-chrome
+                data-chrome-muted
+                className={({ isActive }) =>
+                  `${navLink}${isActive ? ' is-active' : ''}`
+                }
+              >
+                Developers
+              </NavLink>
+            </li>
             <ContactMenu />
           </ul>
 
