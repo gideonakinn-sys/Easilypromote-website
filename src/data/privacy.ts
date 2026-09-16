@@ -256,7 +256,7 @@ export const privacySections: PrivacySection[] = [
       },
       {
         type: 'paragraph',
-        text: 'To exercise these rights, contact us at easilypromote@gmail.com.',
+        text: 'To exercise these rights, contact us at enquiry@easilypromote.com.',
       },
     ],
   },
@@ -324,7 +324,7 @@ export const privacySections: PrivacySection[] = [
       },
       {
         type: 'paragraph',
-        text: 'Email: easilypromote@gmail.com',
+        text: 'Email: enquiry@easilypromote.com',
       },
       {
         type: 'paragraph',

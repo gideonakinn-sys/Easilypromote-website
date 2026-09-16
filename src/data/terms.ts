@@ -12,7 +12,7 @@ export interface TermsSection {
 export const termsMeta = {
   wordmark: 'EasilyPromote',
   website: 'easilypromote.com',
-  email: 'easilypromote@gmail.com',
+  email: 'enquiry@easilypromote.com',
   phone: '09011918305',
   title: 'Creator Terms and Conditions',
   intro: 'The terms on which content creators use the EasilyPromote platform.',
@@ -418,7 +418,7 @@ export const termsSections: TermsSection[] = [
     clauses: [
       {
         number: '19.1',
-        text: 'Questions about these Terms may be sent to easilypromote@gmail.com, or by telephone to 09011918305.',
+        text: 'Questions about these Terms may be sent to enquiry@easilypromote.com, or by telephone to 09011918305.',
       },
     ],
   },

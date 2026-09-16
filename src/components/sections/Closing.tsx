@@ -47,7 +47,13 @@ function Closing() {
         </div>
 
         <p className="mt-8 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-paper/40">
-          Prefer to talk first? easilypromote@gmail.com
+          Prefer to talk first?{' '}
+          <a
+            href="mailto:enquiry@easilypromote.com"
+            className="underline underline-offset-2"
+          >
+            enquiry@easilypromote.com
+          </a>
         </p>
       </div>
     </section>

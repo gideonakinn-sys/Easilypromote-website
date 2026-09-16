@@ -75,20 +75,10 @@ function Footer() {
                 </li>
                 <li>
                   <a
-                    href="mailto:easilypromote@gmail.com"
+                    href="mailto:enquiry@easilypromote.com"
                     className="nudge inline-block text-[0.875rem] text-ink-2"
                   >
-                    easilypromote@gmail.com
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.instagram.com/easilypromote?igsh=MWprbXVjNHQ3YzM2dw=="
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="nudge inline-block text-[0.875rem] text-ink-2"
-                  >
-                    @easilypromote
+                    enquiry@easilypromote.com
                   </a>
                 </li>
               </ul>
@@ -115,10 +105,6 @@ function Footer() {
         <div className="mt-12 flex flex-col gap-2 border-t border-rule pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink-3">
             © {new Date().getFullYear()} EasilyPromote
-          </p>
-          <p className="max-w-[56ch] font-mono text-[0.6875rem] uppercase leading-[1.7] tracking-[0.12em] text-ink-3 sm:text-right">
-            Easily Promote &middot; CAC BN 9726778 &middot; A6 Stellar, Lightwell
-            Garden Estate, Dan Suleiman Street, Utako, Abuja, Nigeria
           </p>
         </div>
       </div>

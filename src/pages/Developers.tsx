@@ -492,7 +492,7 @@ function Developers() {
                 ))}
               </div>
               <Prose>
-                Stuck? Email <a className="font-semibold text-ink underline underline-offset-2" href="mailto:easilypromote@gmail.com">easilypromote@gmail.com</a>{' '}
+                Stuck? Email <a className="font-semibold text-ink underline underline-offset-2" href="mailto:enquiry@easilypromote.com">enquiry@easilypromote.com</a>{' '}
                 with the event_id and the response you received.
               </Prose>
             </Section>

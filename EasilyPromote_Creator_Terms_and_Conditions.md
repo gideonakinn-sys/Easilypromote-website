@@ -1,6 +1,6 @@
 # EasilyPromote
 
-**easilypromote.com** · **easilypromote@gmail.com** · **09011918305**
+**easilypromote.com** · **enquiry@easilypromote.com** · **09011918305**
 
 ---
 
@@ -228,8 +228,8 @@ The terms on which content creators use the EasilyPromote platform.
 
 ## 19. CONTACT
 
-**19.1** Questions about these Terms may be sent to easilypromote@gmail.com, or by telephone to 09011918305.
+**19.1** Questions about these Terms may be sent to enquiry@easilypromote.com, or by telephone to 09011918305.
 
 ---
 
-*EasilyPromote · easilypromote.com · easilypromote@gmail.com · 09011918305*
+*EasilyPromote · easilypromote.com · enquiry@easilypromote.com · 09011918305*

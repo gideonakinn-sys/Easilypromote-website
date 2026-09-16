@@ -111,7 +111,7 @@ function Faq() {
               answer in plain terms.
             </p>
             <a
-              href="mailto:easilypromote@gmail.com"
+              href="mailto:enquiry@easilypromote.com"
               className="springy mt-6 inline-block rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-semibold tracking-[-0.01em] text-stone-900"
             >
               Email us

@@ -50,7 +50,7 @@ function ContactMenu() {
             className="rounded-2xl border border-stone-200 bg-white p-2"
           >
             <a
-              href="mailto:easilypromote@gmail.com"
+              href="mailto:enquiry@easilypromote.com"
               onClick={() => openSheet('contact')}
               className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-stone-700"
             >
@@ -69,7 +69,7 @@ function ContactMenu() {
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
               </span>
-              easilypromote@gmail.com
+              enquiry@easilypromote.com
             </a>
 
             <a
