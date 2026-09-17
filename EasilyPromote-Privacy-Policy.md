@@ -38,8 +38,9 @@ This Policy covers:
 Because EasilyPromote verifies views and engagement through creators' connected social media accounts, we collect:
 - Verified view counts, engagement metrics, and post performance data via authorized platform APIs (e.g., Instagram, TikTok, YouTube, X)
 - Basic public profile data (follower counts, handle, account status) needed to confirm delivery and eligibility
+- Aggregated audience demographics for a creator's connected account, such as the share of their followers by age range, gender, city and country (for example, via Instagram insights for Business and Creator accounts). This data is aggregated by the platform and does not identify any individual follower
 
-We only access what is necessary to verify campaign delivery and calculate payouts. We do not access private messages, contacts, or content unrelated to a claimed campaign slot.
+We only access what is necessary to verify campaign delivery, calculate payouts, and match creators to campaigns whose target audience fits their followers. We do not access private messages, contacts, or content unrelated to a claimed campaign slot.
 
 ### 3.4 Information from Third Parties
 - Identity verification providers (KYC/KYB checks)
@@ -53,14 +54,15 @@ We use collected information to:
 2. Verify identities and business legitimacy (fraud and abuse prevention)
 3. Facilitate campaign creation, slot claiming, and content submission
 4. Verify creator delivery through platform APIs and calculate accurate payouts
-5. Process escrow funding, holds, releases, and wallet transactions
-6. Enable the pre-publish content approval workflow between Brands and Creators
-7. Communicate with you about campaigns, transactions, and account activity
-8. Provide customer support and resolve disputes
-9. Detect, investigate, and prevent fraud, fake engagement, or Platform abuse
-10. Improve the Platform through analytics and product research
-11. Comply with legal, tax, and regulatory obligations
-12. Send marketing communications (with your consent, where required)
+5. Match creators to campaigns using their audience demographics, show Brands a creator's aggregated audience breakdown when they join or apply, and label audience data as verified when it comes from a connected platform
+6. Process escrow funding, holds, releases, and wallet transactions
+7. Enable the pre-publish content approval workflow between Brands and Creators
+8. Communicate with you about campaigns, transactions, and account activity
+9. Provide customer support and resolve disputes
+10. Detect, investigate, and prevent fraud, fake engagement, or Platform abuse
+11. Improve the Platform through analytics and product research
+12. Comply with legal, tax, and regulatory obligations
+13. Send marketing communications (with your consent, where required)
 
 ## 5. Legal Basis for Processing
 
