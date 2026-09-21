@@ -44,7 +44,7 @@ const TOC = [
 
 function InlineCode({ children }: { children: string }) {
   return (
-    <code className={`${MONO} rounded border border-rule bg-raised px-1.5 py-0.5 text-[0.85em] text-ink`}>
+    <code className={`${MONO} rounded border border-rule [overflow-wrap:anywhere] bg-raised px-1.5 py-0.5 text-[0.85em] text-ink`}>
       {children}
     </code>
   )

@@ -126,6 +126,14 @@
     }
   }
 
+  /* Sideways-scrolling strips (tab bars on phones) without a visible scrollbar */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Nav links nudge rather than change colour */
   .nudge {
     transition: transform 0.15s ease-in-out;

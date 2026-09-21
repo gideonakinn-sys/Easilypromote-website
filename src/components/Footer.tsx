@@ -76,7 +76,7 @@ function Footer() {
                 <li>
                   <a
                     href="mailto:enquiry@easilypromote.com"
-                    className="nudge inline-block text-[0.875rem] text-ink-2"
+                    className="nudge inline-block text-[0.875rem] text-ink-2 [overflow-wrap:anywhere]"
                   >
                     enquiry@easilypromote.com
                   </a>

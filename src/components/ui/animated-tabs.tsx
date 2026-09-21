@@ -56,6 +56,14 @@ function AnimatedTabs({
 
     movePill(snap ? 0 : 0.4)
 
+    // On narrow screens the track scrolls sideways; keep the active tab in view.
+    if (!snap && track.scrollWidth > track.clientWidth) {
+      track.scrollTo({
+        left: target.offsetLeft - (track.clientWidth - target.offsetWidth) / 2,
+        behavior: 'smooth',
+      })
+    }
+
     const onResize = () => {
       const t = buttonRefs.current[tabs.findIndex((tab) => tab.label === activeTab)]
       if (!pill || !t) return
@@ -97,7 +105,7 @@ function AnimatedTabs({
       role="tablist"
       aria-label="How a campaign works"
       onKeyDown={onKeyDown}
-      className={`relative inline-flex items-center rounded-full border border-stone-200 bg-white p-1 ${className}`}
+      className={`no-scrollbar relative inline-flex max-w-full items-center overflow-x-auto rounded-full border border-stone-200 bg-white p-1 ${className}`}
     >
       <span
         ref={pillRef}
@@ -119,7 +127,7 @@ function AnimatedTabs({
             aria-controls={`${idPrefix}-panel-${i}`}
             tabIndex={active ? 0 : -1}
             onClick={() => setActiveTab(tab.label)}
-            className={`relative z-10 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-colors md:px-6 ${
+            className={`relative z-10 shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[0.8125rem] font-semibold sm:px-4 sm:text-sm tracking-[-0.01em] transition-colors md:px-6 ${
               active ? 'text-white' : 'text-ink-2'
             }`}
           >
